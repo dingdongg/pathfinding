@@ -75,7 +75,7 @@ export default class Board extends Component {
 
     renderNode(node) {
         const index = node.row * BOARD_WIDTH + node.col;
-        return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType}
+        return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} wallClass={node.wallClass}
             onMouseDown={(row, col) => this.handleMouseDown(row, col)}
             onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
             onMouseUp={() => this.handleMouseUp()} />
@@ -113,7 +113,8 @@ function createInitGrid() {
         return {
             row: row,
             col: col,
-            nodeType: nodeType
+            nodeType: nodeType,
+            wallClass: "",
         }
     }
 }
@@ -145,6 +146,37 @@ function modifyGridWall(grid, row, col) {
             node.nodeType = EmptyNode;
             break;
     }
+
+    // Modifying surrounding wall classes
+    for (let x = row - 1; x <= row + 1; x++) {
+        for (let y = col - 1; y <= col + 1; y++) {
+            try {
+                getNode(grid, x, y).wallClass = getWallClass(grid, x, y);
+            } catch(e) {
+                // Out of bounds exception. Do nothing
+            }
+        }
+    }
+
+}
+
+// Assuming the node at the specified row and col is a wall, will return its corresponding "wall class"
+// Used for css purposes
+function getWallClass(grid, row, col) {
+    let ret = "";
+    for (let x = row - 1; x <= row + 1; x++) {
+        for (let y = col - 1; y <= col + 1; y++) {
+            if (x === row && y === col) {ret += "c"; continue;}
+            let node = undefined;
+            try {
+                node = getNode(grid, x, y);
+            } catch(e) {
+                // Out of bounds exception. Do nothing
+            }
+            ret += (node && node.nodeType === WallNode) ? "1" : "0";
+        }
+    }
+    return ret;
 }
 
 
