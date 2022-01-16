@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
 import Node from "./Node.js";
 
-const BOARD_HEIGHT = 5;
-const BOARD_WIDTH = 5;
+const BOARD_HEIGHT = 8;
+const BOARD_WIDTH = 8;
 
 const INIT_START_ROW = 1;
 const INIT_START_COL = 0;
 const INIT_END_ROW = 2;
 const INIT_END_COL = 4;
+
+
+// These enums used for node type
+export const EmptyNode = Symbol(0), StartNode = Symbol(1), EndNode = Symbol(2), WallNode = Symbol(3);
+
+// These enums used for moving/placing start, end, and walls
+const HoldNone = Symbol(0);
+const HoldStart = Symbol(1);
+const HoldEnd = Symbol(2);
+const HoldWall = Symbol(3);
 
 export default class Board extends Component {
     constructor(props) {
@@ -15,10 +25,7 @@ export default class Board extends Component {
         this.state = {
             grid: [],
             mouseDown: false,
-            holdStart: false,
-            holdEnd: false,
-            prevHoldRow: INIT_START_ROW,
-            prevHoldCol: INIT_START_COL
+            holdType: HoldNone
         }
     }
 
@@ -27,36 +34,48 @@ export default class Board extends Component {
     }
 
     handleMouseDown(row, col) {
-        const newState = {mouseDown: true};
-        const node = getNode(this.state.grid, row, col);
-        if (node.startNode) {
-            newState.holdStart = true;
-        } else if (node.endNode) {
-            newState.holdEnd = true;
+        const newState = { mouseDown: true };
+        const nodeType = getNode(this.state.grid, row, col).nodeType;
+        switch (nodeType) {
+            case StartNode:
+                newState.holdType = HoldStart;
+                break;
+            case EndNode:
+                newState.holdType = HoldEnd;
+                break;
+            case EmptyNode:
+            case WallNode:
+                newState.holdType = HoldWall;
+                modifyGridWall(this.state.grid, row, col);
+                newState.grid = this.state.grid;
         }
         this.setState(newState);
     }
 
     handleMouseEnter(row, col) {
         if (!this.state.mouseDown) return;
-        
-        const grid = this.state.grid.slice();
-        if (this.state.holdStart && !getNode(grid, row, col).endNode) {
+
+        const grid = this.state.grid;
+        const holdType = this.state.holdType;
+        const nodeType = getNode(grid, row, col).nodeType;
+        if (holdType === HoldStart && nodeType === EmptyNode) {
             modifyGridStart(grid, row, col);
-        } else if (this.state.holdEnd && !getNode(grid, row, col).startNode) {
+        } else if (holdType === HoldEnd && nodeType === EmptyNode) {
             modifyGridEnd(grid, row, col);
+        } else if (holdType === HoldWall && (nodeType === EmptyNode || nodeType === WallNode)) {
+            modifyGridWall(grid, row, col);
         }
-        this.setState({grid: grid});
+        this.setState({ grid: grid });
     }
 
     handleMouseUp() {
-        const newState = { mouseDown: false, holdStart: false, holdEnd: false };
+        const newState = { mouseDown: false, holdType: HoldNone };
         this.setState(newState);
     }
 
     renderNode(node) {
         const index = node.row * BOARD_WIDTH + node.col;
-        return <Node key={index} row={node.row} col={node.col} startNode={node.startNode} endNode={node.endNode}
+        return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType}
             onMouseDown={(row, col) => this.handleMouseDown(row, col)}
             onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
             onMouseUp={() => this.handleMouseUp()} />
@@ -90,11 +109,11 @@ function createInitGrid() {
     return grid;
 
     function createNode(row, col) {
+        const nodeType = (row == INIT_START_ROW && col == INIT_START_COL) ? StartNode : (row == INIT_END_ROW && col == INIT_END_COL) ? EndNode : EmptyNode;
         return {
             row: row,
             col: col,
-            startNode: (row == INIT_START_ROW && col == INIT_START_COL),
-            endNode: (row == INIT_END_ROW && col == INIT_END_COL)
+            nodeType: nodeType
         }
     }
 }
@@ -103,29 +122,29 @@ function createInitGrid() {
 // Given a grid, makes the start node at the specified row and col
 // Ensures that all surrounding nodes are not starting nodes
 function modifyGridStart(grid, row, col) {
-    for (let x = row - 2; x <= row + 2; x++) {
-        for (let y = col - 2; y <= col + 2; y++) {
-            try {
-                getNode(grid, x, y).startNode = false;
-            } catch (e) {
-                // Out of bounds exception. Do nothing.
-            }
-        }
+    for (const node of grid) {
+        if (node.nodeType === StartNode) { node.nodeType = EmptyNode; break; }
     }
-    getNode(grid, row, col).startNode = true;
+    getNode(grid, row, col).nodeType = StartNode;
 }
 
 function modifyGridEnd(grid, row, col) {
-    for (let x = row - 2; x <= row + 2; x++) {
-        for (let y = col - 2; y <= col + 2; y++) {
-            try {
-                getNode(grid, x, y).endNode = false;
-            } catch (e) {
-                // Out of bounds exception. Do nothing.
-            }
-        }
+    for (const node of grid) {
+        if (node.nodeType === EndNode) { node.nodeType = EmptyNode; break; }
     }
-    getNode(grid, row, col).endNode = true;
+    getNode(grid, row, col).nodeType = EndNode;
+}
+
+function modifyGridWall(grid, row, col) {
+    const node = getNode(grid, row, col);
+    switch (node.nodeType) {
+        case EmptyNode:
+            node.nodeType = WallNode;
+            break;
+        case WallNode:
+            node.nodeType = EmptyNode;
+            break;
+    }
 }
 
 

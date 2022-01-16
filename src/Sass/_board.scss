@@ -1,9 +1,9 @@
 @import "Node";
 // Need to access Node length
+$height: 8;
+$width: 8;
 
 .board {
-    $height: 5;
-    $width: 5;
     display: grid;
     grid-template-rows: repeat($height, $length);
     grid-template-columns: repeat($width, $length);

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Board, { StartNode, EndNode, WallNode } from './Board';
 
 export default class Node extends Component {
     constructor(props) {
@@ -6,9 +7,18 @@ export default class Node extends Component {
     }
 
     render() {
-        const extraClasses = this.props.startNode ? "start-node" :
-            this.props.endNode ? "end-node" :
-                this.props.wallNode ? "wall-node" : "";
+        let extraClasses = "";
+        switch (this.props.nodeType) {
+            case StartNode:
+                extraClasses = "start-node";
+                break;
+            case EndNode:
+                extraClasses = "end-node";
+                break;
+            case WallNode:
+                extraClasses = "wall-node";
+                break;
+        }
         const row = this.props.row, col = this.props.col;
 
         return (

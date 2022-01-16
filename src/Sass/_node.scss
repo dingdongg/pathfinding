@@ -1,11 +1,11 @@
-$length: 100px;
+$length: 50px;
 
 .node {
   position: relative;
   width: $length;
   height: $length;
   background-color: green;
-  border: 2px black solid;
+  border: 1px rgb(163, 163, 163) solid;
 }
 
 .start-node {
@@ -14,4 +14,8 @@ $length: 100px;
 
 .end-node {
     background-color: red;
+}
+
+.wall-node {
+  background-color: rgb(163, 86, 63);
 }

@@ -2,3 +2,7 @@
 @import "node";
 @import "board";
 
+.App {
+    display: flex;
+    flex-wrap: wrap;
+}
