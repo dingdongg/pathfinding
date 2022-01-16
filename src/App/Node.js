@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import Board, { StartNode, EndNode, WallNode } from './Board';
+import { StartNode, EndNode, WallNode } from './Board';
 
 export default class Node extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     renderWallSegments() {
         const segments = new Array(9);
         for (let i = 0; i < segments.length; i++) {
@@ -27,6 +23,7 @@ export default class Node extends Component {
             case WallNode:
                 extraClasses = "wall-node";
                 break;
+            default:
         }
         const row = this.props.row, col = this.props.col;
 

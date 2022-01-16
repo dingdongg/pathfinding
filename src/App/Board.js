@@ -48,6 +48,9 @@ export default class Board extends Component {
                 newState.holdType = HoldWall;
                 modifyGridWall(this.state.grid, row, col);
                 newState.grid = this.state.grid;
+                break;
+            default:
+
         }
         this.setState(newState);
     }
@@ -109,7 +112,7 @@ function createInitGrid() {
     return grid;
 
     function createNode(row, col) {
-        const nodeType = (row == INIT_START_ROW && col == INIT_START_COL) ? StartNode : (row == INIT_END_ROW && col == INIT_END_COL) ? EndNode : EmptyNode;
+        const nodeType = (row === INIT_START_ROW && col === INIT_START_COL) ? StartNode : (row === INIT_END_ROW && col === INIT_END_COL) ? EndNode : EmptyNode;
         return {
             row: row,
             col: col,
@@ -145,6 +148,7 @@ function modifyGridWall(grid, row, col) {
         case WallNode:
             node.nodeType = EmptyNode;
             break;
+        default:
     }
 
     // Modifying surrounding wall classes
@@ -182,6 +186,7 @@ function getWallSegments(grid, row, col) {
                 case 7:
                     ret[i] = getNode(grid, row + 1, col).nodeType === WallNode;
                     break;
+                default:
             }
         } catch (e) {
             // Out of bounds exception. Do nothing
@@ -193,17 +198,18 @@ function getWallSegments(grid, row, col) {
         try {
             switch (i) {
                 case 0:
-                    ret[i] = ret[1] && ret[3] && getNode(grid, row-1, col-1).nodeType === WallNode;
+                    ret[i] = ret[1] && ret[3] && getNode(grid, row - 1, col - 1).nodeType === WallNode;
                     break;
                 case 2:
-                    ret[i] = ret[1] && ret[5] && getNode(grid, row-1, col+1).nodeType === WallNode;
+                    ret[i] = ret[1] && ret[5] && getNode(grid, row - 1, col + 1).nodeType === WallNode;
                     break;
                 case 6:
-                    ret[i] = ret[3] && ret[7] && getNode(grid, row+1, col-1).nodeType === WallNode;
+                    ret[i] = ret[3] && ret[7] && getNode(grid, row + 1, col - 1).nodeType === WallNode;
                     break;
                 case 8:
-                    ret[i] = ret[5] && ret[7] && getNode(grid, row+1, col+1).nodeType === WallNode;
+                    ret[i] = ret[5] && ret[7] && getNode(grid, row + 1, col + 1).nodeType === WallNode;
                     break;
+                default:
             }
         } catch (e) {
             // Out of bounds exception. Do nothing
@@ -214,6 +220,6 @@ function getWallSegments(grid, row, col) {
 
 
 function getNode(grid, row, col) {
-    if (row >= BOARD_HEIGHT || col >= BOARD_WIDTH || row < 0 || col < 0) { throw "Invalid row or column."};
+    if (row >= BOARD_HEIGHT || col >= BOARD_WIDTH || row < 0 || col < 0) { throw new Error("Invalid row or column.") };
     return grid[row * BOARD_WIDTH + col];
 }
