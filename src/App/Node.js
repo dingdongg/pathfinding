@@ -19,6 +19,7 @@ export default class Node extends Component {
                 extraClasses = "wall-node";
                 break;
         }
+        extraClasses += ` ${this.props.wallClasses}`
         const row = this.props.row, col = this.props.col;
 
         return (

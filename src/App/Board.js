@@ -75,7 +75,7 @@ export default class Board extends Component {
 
     renderNode(node) {
         const index = node.row * BOARD_WIDTH + node.col;
-        return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} wallClass={node.wallClass}
+        return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} wallClasses={node.wallClasses}
             onMouseDown={(row, col) => this.handleMouseDown(row, col)}
             onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
             onMouseUp={() => this.handleMouseUp()} />
@@ -114,7 +114,7 @@ function createInitGrid() {
             row: row,
             col: col,
             nodeType: nodeType,
-            wallClass: "",
+            wallClasses: "",
         }
     }
 }
@@ -151,7 +151,7 @@ function modifyGridWall(grid, row, col) {
     for (let x = row - 1; x <= row + 1; x++) {
         for (let y = col - 1; y <= col + 1; y++) {
             try {
-                getNode(grid, x, y).wallClass = getWallClass(grid, x, y);
+                getNode(grid, x, y).wallClasses = getwallClasses(grid, x, y);
             } catch(e) {
                 // Out of bounds exception. Do nothing
             }
@@ -162,18 +162,18 @@ function modifyGridWall(grid, row, col) {
 
 // Assuming the node at the specified row and col is a wall, will return its corresponding "wall class"
 // Used for css purposes
-function getWallClass(grid, row, col) {
+function getwallClasses(grid, row, col) {
     let ret = "";
     for (let x = row - 1; x <= row + 1; x++) {
         for (let y = col - 1; y <= col + 1; y++) {
-            if (x === row && y === col) {ret += "c"; continue;}
+            if (x === row && y === col) {continue;}
             let node = undefined;
             try {
                 node = getNode(grid, x, y);
             } catch(e) {
                 // Out of bounds exception. Do nothing
             }
-            ret += (node && node.nodeType === WallNode) ? "1" : "0";
+            ret += (node && node.nodeType === WallNode) ? `wall-class-${3*(x-row+1) + (y-col+1)} `: "";
         }
     }
     return ret;
