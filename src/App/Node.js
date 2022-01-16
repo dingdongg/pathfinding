@@ -15,7 +15,6 @@ export default class Node extends Component {
             <div className={`node ${extraClasses}`}
                 onMouseDown={() => this.props.onMouseDown(row, col)}
                 onMouseEnter={() => this.props.onMouseEnter(row, col)}
-                onMouseLeave={() => this.props.onMouseLeave(row, col)}
                 onMouseUp={() => this.props.onMouseUp()}>
                 {this.props.index}</div>
         )

@@ -22,17 +22,13 @@ export default class Board extends Component {
         }
     }
 
-    getNode(grid, row, col) {
-        return grid[row * BOARD_WIDTH + col];
-    }
-
     componentDidMount() {
         this.setState({ grid: createInitGrid() });
     }
 
     handleMouseDown(row, col) {
         const newState = {mouseDown: true};
-        const node = this.getNode(this.state.grid, row, col);
+        const node = getNode(this.state.grid, row, col);
         if (node.startNode) {
             newState.holdStart = true;
         } else if (node.endNode) {
@@ -43,26 +39,12 @@ export default class Board extends Component {
 
     handleMouseEnter(row, col) {
         if (!this.state.mouseDown) return;
-
+        
         const grid = this.state.grid.slice();
-        const node = this.getNode(grid, row, col);
-        if (this.state.holdStart) {
-            node.startNode = true;
-        } else if (this.state.holdEnd) {
-            node.endNode = true;
-        }
-        this.setState({grid: grid});
-    }
-
-    handleMouseLeave(row, col) {
-        if (!this.state.mouseDown) return;
-
-        // Modifications
-        const grid = this.state.grid.slice();
-        if (this.state.holdStart) {
-            this.getNode(grid, row, col).startNode = false;
-        } else if (this.state.holdEnd) {
-            this.getNode(grid, row, col).endNode = false;
+        if (this.state.holdStart && !getNode(grid, row, col).endNode) {
+            modifyGridStart(grid, row, col);
+        } else if (this.state.holdEnd && !getNode(grid, row, col).startNode) {
+            modifyGridEnd(grid, row, col);
         }
         this.setState({grid: grid});
     }
@@ -77,7 +59,6 @@ export default class Board extends Component {
         return <Node key={index} row={node.row} col={node.col} startNode={node.startNode} endNode={node.endNode}
             onMouseDown={(row, col) => this.handleMouseDown(row, col)}
             onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
-            onMouseLeave={(row, col) => this.handleMouseLeave(row, col)}
             onMouseUp={() => this.handleMouseUp()} />
     }
 
@@ -86,7 +67,7 @@ export default class Board extends Component {
         for (const node of this.state.grid) {
             grid.push(this.renderNode(node));
         }
-        return <div className="board">{grid}</div>
+        return <div className="board" onMouseLeave={() => this.handleMouseUp()}>{grid}</div>
     }
 
     render() {
@@ -116,4 +97,38 @@ function createInitGrid() {
             endNode: (row == INIT_END_ROW && col == INIT_END_COL)
         }
     }
+}
+
+
+// Given a grid, makes the start node at the specified row and col
+// Ensures that all surrounding nodes are not starting nodes
+function modifyGridStart(grid, row, col) {
+    for (let x = row - 2; x <= row + 2; x++) {
+        for (let y = col - 2; y <= col + 2; y++) {
+            try {
+                getNode(grid, x, y).startNode = false;
+            } catch (e) {
+                // Out of bounds exception. Do nothing.
+            }
+        }
+    }
+    getNode(grid, row, col).startNode = true;
+}
+
+function modifyGridEnd(grid, row, col) {
+    for (let x = row - 2; x <= row + 2; x++) {
+        for (let y = col - 2; y <= col + 2; y++) {
+            try {
+                getNode(grid, x, y).endNode = false;
+            } catch (e) {
+                // Out of bounds exception. Do nothing.
+            }
+        }
+    }
+    getNode(grid, row, col).endNode = true;
+}
+
+
+function getNode(grid, row, col) {
+    return grid[row * BOARD_WIDTH + col];
 }
