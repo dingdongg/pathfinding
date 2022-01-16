@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import Node from "./Node.js";
 
-const BOARD_HEIGHT = 8;
-const BOARD_WIDTH = 8;
+const BOARD_HEIGHT = 10;
+const BOARD_WIDTH = 10;
 
 const INIT_START_ROW = 1;
-const INIT_START_COL = 0;
-const INIT_END_ROW = 2;
-const INIT_END_COL = 4;
+const INIT_START_COL = 1;
+const INIT_END_ROW = 8;
+const INIT_END_COL = 8;
 
 
 // These enums used for node type
