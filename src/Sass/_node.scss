@@ -4,18 +4,30 @@ $length: 50px;
   position: relative;
   width: $length;
   height: $length;
-  background-color: green;
+  background-color: rgb(41, 136, 41);
   border: 1px rgb(163, 163, 163) solid;
 }
 
 .start-node {
-    background-color: aqua;
+  background-color: rgb(255, 241, 43);
 }
 
 .end-node {
-    background-color: red;
+  background-color: rgb(240, 75, 75);
 }
 
 .wall-node {
-  background-color: rgb(163, 86, 63);
+  .wall-segments {
+    display: grid;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    grid-template-rows: 1fr 2fr 1fr;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-auto-flow: dense;
+
+    .wall-segment {
+      background-color: rgb(16, 157, 238);
+    }
+  }
 }

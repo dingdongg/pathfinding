@@ -75,7 +75,7 @@ export default class Board extends Component {
 
     renderNode(node) {
         const index = node.row * BOARD_WIDTH + node.col;
-        return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} wallClasses={node.wallClasses}
+        return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} wallSegments={node.wallSegments}
             onMouseDown={(row, col) => this.handleMouseDown(row, col)}
             onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
             onMouseUp={() => this.handleMouseUp()} />
@@ -114,7 +114,7 @@ function createInitGrid() {
             row: row,
             col: col,
             nodeType: nodeType,
-            wallClasses: "",
+            wallSegments: new Array(9).fill(false),
         }
     }
 }
@@ -151,8 +151,8 @@ function modifyGridWall(grid, row, col) {
     for (let x = row - 1; x <= row + 1; x++) {
         for (let y = col - 1; y <= col + 1; y++) {
             try {
-                getNode(grid, x, y).wallClasses = getwallClasses(grid, x, y);
-            } catch(e) {
+                getNode(grid, x, y).wallSegments = getWallSegments(grid, x, y);
+            } catch (e) {
                 // Out of bounds exception. Do nothing
             }
         }
@@ -162,18 +162,51 @@ function modifyGridWall(grid, row, col) {
 
 // Assuming the node at the specified row and col is a wall, will return its corresponding "wall class"
 // Used for css purposes
-function getwallClasses(grid, row, col) {
-    let ret = "";
-    for (let x = row - 1; x <= row + 1; x++) {
-        for (let y = col - 1; y <= col + 1; y++) {
-            if (x === row && y === col) {continue;}
-            let node = undefined;
-            try {
-                node = getNode(grid, x, y);
-            } catch(e) {
-                // Out of bounds exception. Do nothing
+function getWallSegments(grid, row, col) {
+    let ret = new Array(9);
+    ret[4] = true;
+
+    // First do direct edges
+    for (let i = 1; i < ret.length; i += 2) {
+        try {
+            switch (i) {
+                case 1:
+                    ret[i] = getNode(grid, row - 1, col).nodeType === WallNode;
+                    break;
+                case 3:
+                    ret[i] = getNode(grid, row, col - 1).nodeType === WallNode;
+                    break;
+                case 5:
+                    ret[i] = getNode(grid, row, col + 1).nodeType === WallNode;
+                    break;
+                case 7:
+                    ret[i] = getNode(grid, row + 1, col).nodeType === WallNode;
+                    break;
             }
-            ret += (node && node.nodeType === WallNode) ? `wall-class-${3*(x-row+1) + (y-col+1)} `: "";
+        } catch (e) {
+            // Out of bounds exception. Do nothing
+        }
+    }
+
+    // Then handle corners
+    for (let i = 0; i < ret.length; i += 2) {
+        try {
+            switch (i) {
+                case 0:
+                    ret[i] = ret[1] && ret[3] && getNode(grid, row-1, col-1).nodeType === WallNode;
+                    break;
+                case 2:
+                    ret[i] = ret[1] && ret[5] && getNode(grid, row-1, col+1).nodeType === WallNode;
+                    break;
+                case 6:
+                    ret[i] = ret[3] && ret[7] && getNode(grid, row+1, col-1).nodeType === WallNode;
+                    break;
+                case 8:
+                    ret[i] = ret[5] && ret[7] && getNode(grid, row+1, col+1).nodeType === WallNode;
+                    break;
+            }
+        } catch (e) {
+            // Out of bounds exception. Do nothing
         }
     }
     return ret;
@@ -181,5 +214,6 @@ function getwallClasses(grid, row, col) {
 
 
 function getNode(grid, row, col) {
+    if (row >= BOARD_HEIGHT || col >= BOARD_WIDTH || row < 0 || col < 0) { throw "Invalid row or column."};
     return grid[row * BOARD_WIDTH + col];
 }

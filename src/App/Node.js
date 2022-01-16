@@ -6,6 +6,15 @@ export default class Node extends Component {
         super(props);
     }
 
+    renderWallSegments() {
+        const segments = new Array(9);
+        for (let i = 0; i < segments.length; i++) {
+            const className = this.props.wallSegments[i] ? "wall-segment" : "";
+            segments[i] = <div key={i} className={className}></div>
+        }
+        return <div className="wall-segments">{segments}</div>
+    }
+
     render() {
         let extraClasses = "";
         switch (this.props.nodeType) {
@@ -19,7 +28,6 @@ export default class Node extends Component {
                 extraClasses = "wall-node";
                 break;
         }
-        extraClasses += ` ${this.props.wallClasses}`
         const row = this.props.row, col = this.props.col;
 
         return (
@@ -27,7 +35,7 @@ export default class Node extends Component {
                 onMouseDown={() => this.props.onMouseDown(row, col)}
                 onMouseEnter={() => this.props.onMouseEnter(row, col)}
                 onMouseUp={() => this.props.onMouseUp()}>
-                {this.props.index}</div>
+                {this.renderWallSegments()}</div>
         )
     }
 }
