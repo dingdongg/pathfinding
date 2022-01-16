@@ -1,0 +1,17 @@
+$length: 100px;
+
+.node {
+  position: relative;
+  width: $length;
+  height: $length;
+  background-color: green;
+  border: 2px black solid;
+}
+
+.start-node {
+    background-color: aqua;
+}
+
+.end-node {
+    background-color: red;
+}
