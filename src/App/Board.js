@@ -13,7 +13,7 @@ const HoldStart = Symbol(1);
 const HoldEnd = Symbol(2);
 const HoldWall = Symbol(3);
 
-// Class for the board where pathfinding occurs
+
 export default class Board extends Component {
     constructor(props) {
         super(props);

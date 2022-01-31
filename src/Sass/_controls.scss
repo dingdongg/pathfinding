@@ -1,0 +1,19 @@
+.controls {
+    display: block;
+    width: 100%;
+    padding: 20px 40px 40px 40px;
+    background-color: rgb(179, 221, 255);
+
+    h1 {
+        padding: 10px;
+        border-bottom: 1px grey solid;
+    }
+
+    .placements {
+        display: inline-flex;
+    }
+    
+    button {
+        @include button(rgb(238, 245, 255), rgb(205, 224, 241), rgb(168, 194, 219));
+    }
+}

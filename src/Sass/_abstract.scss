@@ -1,0 +1,28 @@
+@mixin button(
+    $normal: aliceblue,
+    $hover: rgb(205, 232, 255),
+    $click: rgb(138, 166, 190),
+    $shadow: #999,
+    $shadowClick: rgb(128, 128, 128)
+) {
+    width: 90px;
+    height: 60px;
+    margin: 10px;
+    padding: 15px 25px;
+    text-align: center;
+    cursor: pointer;
+    background-color: $normal;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px $shadow;
+
+    &:hover {
+        background-color: $hover;
+    }
+
+    &:active {
+        background-color: $click;
+        box-shadow: 0 5px $shadowClick;
+        transform: translateY(4px);
+    }
+}

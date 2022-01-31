@@ -8,4 +8,10 @@ $width: 20;
     grid-template-rows: repeat($height, $length);
     grid-template-columns: repeat($width, $length);
     grid-auto-flow: dense;
+    margin: 20px;
+}
+
+button {
+    display: block;
+    @include button(rgb(98, 233, 98), rgb(37, 185, 37), rgb(11, 124, 11), );
 }
