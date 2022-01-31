@@ -23,12 +23,6 @@ code {
   border-left: 0;
 }
 
-.node.visited:not(.node.end-node) {
-  animation-name: visitAnimation;
-  animation-duration: 0.75s;
-  background-color: #0a2e0a;
-}
-
 .node.start-node {
   background-color: #fff12b;
 }
@@ -49,6 +43,16 @@ code {
 
 .node.wall-node .wall-segments .wall-segment {
   background-color: #109dee;
+}
+
+.node.visited:not(.node.end-node) {
+  animation-name: visitAnimation;
+  animation-duration: 0.75s;
+  background-color: #0a2e0a;
+}
+
+.node.path-node.visited {
+  background-color: blue !important;
 }
 
 @keyframes visitAnimation {
@@ -83,12 +87,6 @@ code {
   border-left: 0;
 }
 
-.node.visited:not(.node.end-node) {
-  animation-name: visitAnimation;
-  animation-duration: 0.75s;
-  background-color: #0a2e0a;
-}
-
 .node.start-node {
   background-color: #fff12b;
 }
@@ -109,6 +107,16 @@ code {
 
 .node.wall-node .wall-segments .wall-segment {
   background-color: #109dee;
+}
+
+.node.visited:not(.node.end-node) {
+  animation-name: visitAnimation;
+  animation-duration: 0.75s;
+  background-color: #0a2e0a;
+}
+
+.node.path-node.visited {
+  background-color: blue !important;
 }
 
 @keyframes visitAnimation {
@@ -136,7 +144,7 @@ code {
 .board {
   display: grid;
   grid-template-rows: repeat(10, 50px);
-  grid-template-columns: repeat(10, 50px);
+  grid-template-columns: repeat(20, 50px);
   grid-auto-flow: dense;
 }
 

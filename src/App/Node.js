@@ -5,6 +5,7 @@ import {INIT_START_ROW, INIT_START_COL, INIT_END_ROW, INIT_END_COL} from "./Boar
 // These enums used for node type
 export const EmptyNode = Symbol(0), StartNode = Symbol(1), EndNode = Symbol(2), WallNode = Symbol(3);
 
+// Class for one "Node" (square) on the board
 export default class Node extends Component {
     static createNode(row, col) {
         const nodeType = (row === INIT_START_ROW && col === INIT_START_COL) ? StartNode : (row === INIT_END_ROW && col === INIT_END_COL) ? EndNode : EmptyNode;
@@ -13,8 +14,12 @@ export default class Node extends Component {
             col: col,
             nodeType: nodeType,
             wallSegments: new Array(9).fill(false),
+            // Pathfinding props
             distance: Infinity,
+            weight: 1,
+            prev: null, // Used for keeping track of shortest path
             visited: false,
+            isPath: false, // True if this node is part of the shortest path
         }
     }
 
@@ -42,6 +47,7 @@ export default class Node extends Component {
             default:
         }
         extraClasses += this.props.visited ? " visited" : "";
+        extraClasses += this.props.isPath ? " path-node" : "";
         const row = this.props.row, col = this.props.col;
 
         return (

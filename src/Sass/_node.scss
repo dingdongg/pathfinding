@@ -9,12 +9,6 @@ $length: 50px;
   border-top: 0;
   border-left: 0;
 
-  &.visited:not(&.end-node) {
-    animation-name: visitAnimation;
-    animation-duration: 0.75s;
-    background-color: rgb(10, 46, 10);
-  }
-
   &.start-node {
     background-color: rgb(255, 241, 43);
   }
@@ -37,6 +31,16 @@ $length: 50px;
         background-color: rgb(16, 157, 238);
       }
     }
+  }
+
+  &.visited:not(&.end-node) {
+    animation-name: visitAnimation;
+    animation-duration: 0.75s;
+    background-color: rgb(10, 46, 10);
+  }
+
+  &.path-node.visited:not(&.start-node, &.end-node) {
+    background-color: blue !important;
   }
 }
 

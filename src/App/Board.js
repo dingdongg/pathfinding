@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Djikstra from '../Pathfinding/Djikstra.js';
 import Node, { StartNode, EndNode, EmptyNode, WallNode } from "./Node.js";
 
-export const BOARD_HEIGHT = 10, BOARD_WIDTH = 10;
+// WHEN UPDATING BOARD DIMENSIONS, MAKE SURE TO UPDATE _board.scss AS WELL
+export const BOARD_HEIGHT = 10, BOARD_WIDTH = 20; 
 export const INIT_START_ROW = 1, INIT_START_COL = 1, INIT_END_ROW = 8, INIT_END_COL = 8;
 
 
@@ -12,6 +13,7 @@ const HoldStart = Symbol(1);
 const HoldEnd = Symbol(2);
 const HoldWall = Symbol(3);
 
+// Class for the board where pathfinding occurs
 export default class Board extends Component {
     constructor(props) {
         super(props);
@@ -77,19 +79,32 @@ export default class Board extends Component {
 
         const searchOrder = path.searchOrder, shortestPath = path.shortestPath;
         if (searchOrder.length > 0) {
-            this.animatePath(searchOrder, 0);
+            this.animateSearch(searchOrder, shortestPath, 0);
         }
     }
 
     // Animates the "next"th node in the searchOrder
-    animatePath(searchOrder, next) {
+    // Hold "shortestPath" so can start shortest path animation when search is done
+    animateSearch(searchOrder, shortestPath, next) {
         const grid = this.state.grid;
-        console.log("Animation step " + next);
         grid[searchOrder[next]].visited = true;
         this.setState({grid: grid});
         next++;
         if (next < searchOrder.length) {
-            setTimeout(() => {this.animatePath(searchOrder, next)}, 100);
+            setTimeout(() => {this.animateSearch(searchOrder, shortestPath, next)}, 40);
+        } else {
+            setTimeout(() => {this.animatePath(shortestPath, 0)}, 40);
+        }
+    }
+
+    // Animates the "next"th node in the shortestPath
+    animatePath(shortestPath, next) {
+        const grid = this.state.grid;
+        grid[shortestPath[next]].isPath = true;
+        this.setState({grid: grid});
+        next++;
+        if (next < shortestPath.length) {
+            setTimeout(() => {this.animatePath(shortestPath, next)}, 100);
         }
     }
 
@@ -101,6 +116,7 @@ export default class Board extends Component {
             onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
             onMouseUp={() => this.handleMouseUp()}
             visited={node.visited}
+            isPath={node.isPath}
             distance={node.distance} />
     }
 
