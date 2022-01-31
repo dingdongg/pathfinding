@@ -8,28 +8,61 @@ $length: 50px;
   border: 1px rgba(175, 175, 175, 0.637) solid;
   border-top: 0;
   border-left: 0;
-}
 
-.start-node {
-  background-color: rgb(255, 241, 43);
-}
+  &.visited:not(&.end-node) {
+    animation-name: visitAnimation;
+    animation-duration: 0.75s;
+    background-color: rgb(10, 46, 10);
+  }
 
-.end-node {
-  background-color: rgb(240, 75, 75);
-}
+  &.start-node {
+    background-color: rgb(255, 241, 43);
+  }
 
-.wall-node {
-  .wall-segments {
-    display: grid;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    grid-template-rows: 1fr 3fr 1fr;
-    grid-template-columns: 1fr 3fr 1fr;
-    grid-auto-flow: dense;
+  &.end-node {
+    background-color: rgb(240, 75, 75);
+  }
 
-    .wall-segment {
-      background-color: rgb(16, 157, 238);
+  &.wall-node {
+    .wall-segments {
+      display: grid;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      grid-template-rows: 1fr 3fr 1fr;
+      grid-template-columns: 1fr 3fr 1fr;
+      grid-auto-flow: dense;
+
+      .wall-segment {
+        background-color: rgb(16, 157, 238);
+      }
     }
+  }
+}
+
+
+
+@keyframes visitAnimation {
+  0% {
+    transform: scale(0.9);
+    border: 1px rgba(175, 175, 175, 0.637) solid;
+    z-index: 2;
+  }
+
+  10% {
+    transform: scale(1.2);
+    background-color: rgb(53, 170, 53);
+  }
+
+  99% {
+    border: 1px rgba(175, 175, 175, 0.637) solid;
+  }
+
+  100% {
+    transform: scale(1);
+    border-top: 0;
+    border-left: 0;
+    z-index: 1;
+    background-color: rgb(10, 46, 10);
   }
 }

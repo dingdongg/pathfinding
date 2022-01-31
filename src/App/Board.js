@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import Node from "./Node.js";
+import Djikstra from '../Pathfinding/Djikstra.js';
+import Node, { StartNode, EndNode, EmptyNode, WallNode } from "./Node.js";
 
-const BOARD_HEIGHT = 10;
-const BOARD_WIDTH = 10;
+export const BOARD_HEIGHT = 10, BOARD_WIDTH = 10;
+export const INIT_START_ROW = 1, INIT_START_COL = 1, INIT_END_ROW = 8, INIT_END_COL = 8;
 
-const INIT_START_ROW = 1;
-const INIT_START_COL = 1;
-const INIT_END_ROW = 8;
-const INIT_END_COL = 8;
-
-
-// These enums used for node type
-export const EmptyNode = Symbol(0), StartNode = Symbol(1), EndNode = Symbol(2), WallNode = Symbol(3);
 
 // These enums used for moving/placing start, end, and walls
 const HoldNone = Symbol(0);
@@ -76,12 +69,39 @@ export default class Board extends Component {
         this.setState(newState);
     }
 
+    // Finds shortest path and animates it
+    findPath() {
+        const pathfinder = new Djikstra(BOARD_HEIGHT, BOARD_WIDTH), path = pathfinder.findPath(this.state.grid);
+        // Need to reset state of board for animation
+        resetGrid(this.state.grid);
+
+        const searchOrder = path.searchOrder, shortestPath = path.shortestPath;
+        if (searchOrder.length > 0) {
+            this.animatePath(searchOrder, 0);
+        }
+    }
+
+    // Animates the "next"th node in the searchOrder
+    animatePath(searchOrder, next) {
+        const grid = this.state.grid;
+        console.log("Animation step " + next);
+        grid[searchOrder[next]].visited = true;
+        this.setState({grid: grid});
+        next++;
+        if (next < searchOrder.length) {
+            setTimeout(() => {this.animatePath(searchOrder, next)}, 100);
+        }
+    }
+
+    
     renderNode(node) {
         const index = node.row * BOARD_WIDTH + node.col;
         return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} wallSegments={node.wallSegments}
             onMouseDown={(row, col) => this.handleMouseDown(row, col)}
             onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
-            onMouseUp={() => this.handleMouseUp()} />
+            onMouseUp={() => this.handleMouseUp()}
+            visited={node.visited}
+            distance={node.distance} />
     }
 
     renderBoard() {
@@ -93,7 +113,12 @@ export default class Board extends Component {
     }
 
     render() {
-        return this.renderBoard();
+        return (
+            <div>
+                {this.renderBoard()}
+                <button onClick={() => this.findPath()}>Find Path</button>
+            </div>
+        );
     }
 }
 
@@ -106,19 +131,16 @@ function createInitGrid() {
     const grid = [];
     for (let row = 0; row < BOARD_HEIGHT; row++) {
         for (let col = 0; col < BOARD_WIDTH; col++) {
-            grid.push(createNode(row, col));
+            grid.push(Node.createNode(row, col));
         }
     }
     return grid;
+}
 
-    function createNode(row, col) {
-        const nodeType = (row === INIT_START_ROW && col === INIT_START_COL) ? StartNode : (row === INIT_END_ROW && col === INIT_END_COL) ? EndNode : EmptyNode;
-        return {
-            row: row,
-            col: col,
-            nodeType: nodeType,
-            wallSegments: new Array(9).fill(false),
-        }
+// Resets visited state of all nodes in grid
+function resetGrid(grid) {
+    for (const node of grid) {
+        node.visited = false;
     }
 }
 

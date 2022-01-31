@@ -23,15 +23,21 @@ code {
   border-left: 0;
 }
 
-.start-node {
+.node.visited:not(.node.end-node) {
+  animation-name: visitAnimation;
+  animation-duration: 0.75s;
+  background-color: #0a2e0a;
+}
+
+.node.start-node {
   background-color: #fff12b;
 }
 
-.end-node {
+.node.end-node {
   background-color: #f04b4b;
 }
 
-.wall-node .wall-segments {
+.node.wall-node .wall-segments {
   display: grid;
   position: relative;
   width: 100%;
@@ -41,8 +47,30 @@ code {
   grid-auto-flow: dense;
 }
 
-.wall-node .wall-segments .wall-segment {
+.node.wall-node .wall-segments .wall-segment {
   background-color: #109dee;
+}
+
+@keyframes visitAnimation {
+  0% {
+    transform: scale(0.9);
+    border: 1px rgba(175, 175, 175, 0.637) solid;
+    z-index: 2;
+  }
+  10% {
+    transform: scale(1.2);
+    background-color: #35aa35;
+  }
+  99% {
+    border: 1px rgba(175, 175, 175, 0.637) solid;
+  }
+  100% {
+    transform: scale(1);
+    border-top: 0;
+    border-left: 0;
+    z-index: 1;
+    background-color: #0a2e0a;
+  }
 }
 
 .node {
@@ -55,15 +83,21 @@ code {
   border-left: 0;
 }
 
-.start-node {
+.node.visited:not(.node.end-node) {
+  animation-name: visitAnimation;
+  animation-duration: 0.75s;
+  background-color: #0a2e0a;
+}
+
+.node.start-node {
   background-color: #fff12b;
 }
 
-.end-node {
+.node.end-node {
   background-color: #f04b4b;
 }
 
-.wall-node .wall-segments {
+.node.wall-node .wall-segments {
   display: grid;
   position: relative;
   width: 100%;
@@ -73,8 +107,30 @@ code {
   grid-auto-flow: dense;
 }
 
-.wall-node .wall-segments .wall-segment {
+.node.wall-node .wall-segments .wall-segment {
   background-color: #109dee;
+}
+
+@keyframes visitAnimation {
+  0% {
+    transform: scale(0.9);
+    border: 1px rgba(175, 175, 175, 0.637) solid;
+    z-index: 2;
+  }
+  10% {
+    transform: scale(1.2);
+    background-color: #35aa35;
+  }
+  99% {
+    border: 1px rgba(175, 175, 175, 0.637) solid;
+  }
+  100% {
+    transform: scale(1);
+    border-top: 0;
+    border-left: 0;
+    z-index: 1;
+    background-color: #0a2e0a;
+  }
 }
 
 .board {
