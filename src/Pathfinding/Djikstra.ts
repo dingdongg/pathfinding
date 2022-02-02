@@ -1,9 +1,9 @@
 import { Heap } from "./Heap";
-import Node, { NodeType } from "../App/Node";
-
+import { NodeType } from "../App/Node";
+import {Pathfinder, pathInfo} from "./Pathfinder";
 
 // Pathfinding class for Djikstra's algorithm
-export default class Djikstra {
+export default class Djikstra implements Pathfinder {
     BOARD_HEIGHT: number;
     BOARD_WIDTH: number;
     searchOrder: any;
@@ -18,11 +18,9 @@ export default class Djikstra {
         this.BOARD_HEIGHT = BOARD_HEIGHT;
         this.BOARD_WIDTH = BOARD_WIDTH;
     }
-
-    // Find shortest path from start node to end node
-    // Assumes all nodes start with infinite distance and are unvisited
-    // Note that this WILL MODIFY visited states of board
-    findPath(grid: any[]) {
+    
+    
+    public findPath(grid: any[]):pathInfo {
         this.init(grid);
         this.addNeighbors(this.startNode);
         this.search();
@@ -35,10 +33,10 @@ export default class Djikstra {
     }
 
     // Recursive search to find shortest path.
-    search() {
+    private search() {
         // updating "Next"
         let next = undefined;
-        while ((next == undefined || next.visited) && this.heap.length() > 0) {
+        while ((next === undefined || next.visited) && this.heap.length() > 0) {
             next = this.heap.pop();
         } 
         // Searching "next"
@@ -50,7 +48,7 @@ export default class Djikstra {
         }
         this.addNeighbors(next);
         // Case where no valid path is found
-        if (this.heap.length() == 0) {
+        if (this.heap.length() === 0) {
             this.pathFound = false;
             return;
         }
@@ -58,7 +56,7 @@ export default class Djikstra {
     }
 
     // Initializes class variables
-    init(grid: any[]) {
+    private init(grid: any[]) {
         this.grid = grid.slice();
         this.searchOrder = [];
         this.shortestPath = [];
@@ -79,7 +77,7 @@ export default class Djikstra {
     }
 
     // Adds node's (non-wall, unvisited) neighbors to the heap
-    addNeighbors(node: any) {
+    private addNeighbors(node: any) {
         const BOARD_HEIGHT = this.BOARD_HEIGHT, BOARD_WIDTH = this.BOARD_WIDTH,
             index = this.getIndex(node),
             top = (index - BOARD_WIDTH >= 0) ? index - BOARD_WIDTH : undefined,
@@ -99,12 +97,12 @@ export default class Djikstra {
     }
 
     // Adds the node to the search order
-    addToSearchOrder(node: any) {
+    private addToSearchOrder(node: any) {
         this.searchOrder.push(node.row * this.BOARD_WIDTH + node.col);
     }
 
     // Initializes "this.shortestPath"
-    calcShortestPath() {
+    private calcShortestPath() {
         let prev = this.endNode.prev;
         const shortestPath = [];
         while (prev !== null) {
@@ -115,7 +113,7 @@ export default class Djikstra {
     }
 
     // Returns the (array) index for a node
-    getIndex(node: any) {
+    private getIndex(node: any) {
         return node.row*this.BOARD_WIDTH + node.col;
     }
 }
