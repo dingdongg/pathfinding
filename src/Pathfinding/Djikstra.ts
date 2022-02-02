@@ -1,10 +1,20 @@
 import { Heap } from "./Heap";
-import Node, { StartNode, EndNode, WallNode } from "../App/Node.js";
+import Node, { NodeType } from "../App/Node";
 
 
 // Pathfinding class for Djikstra's algorithm
 export default class Djikstra {
-    constructor(BOARD_HEIGHT, BOARD_WIDTH) {
+    BOARD_HEIGHT: number;
+    BOARD_WIDTH: number;
+    searchOrder: any;
+    shortestPath: any;
+    pathFound: any;
+    heap: any;
+    grid: any;
+    startNode: any;
+    endNode: any;
+
+    constructor(BOARD_HEIGHT: number, BOARD_WIDTH: number) {
         this.BOARD_HEIGHT = BOARD_HEIGHT;
         this.BOARD_WIDTH = BOARD_WIDTH;
     }
@@ -12,7 +22,7 @@ export default class Djikstra {
     // Find shortest path from start node to end node
     // Assumes all nodes start with infinite distance and are unvisited
     // Note that this WILL MODIFY visited states of board
-    findPath(grid) {
+    findPath(grid: any[]) {
         this.init(grid);
         this.addNeighbors(this.startNode);
         this.search();
@@ -34,7 +44,7 @@ export default class Djikstra {
         // Searching "next"
         next.visited = true;
         this.addToSearchOrder(next);
-        if (next.nodeType === EndNode) {
+        if (next.nodeType === NodeType.EndNode) {
             this.pathFound = true;
             return;
         }
@@ -48,20 +58,20 @@ export default class Djikstra {
     }
 
     // Initializes class variables
-    init(grid) {
+    init(grid: any[]) {
         this.grid = grid.slice();
         this.searchOrder = [];
         this.shortestPath = [];
         this.startNode = undefined;
         this.endNode = undefined;
-        this.heap = new Heap((node) => { return node.distance });
+        this.heap = new Heap((node: any) => { return node.distance });
         // Initialize start and end indices
         for (let i = 0; i < this.grid.length; i++) {
-            if (grid[i].nodeType === StartNode) {
+            if (grid[i].nodeType === NodeType.StartNode) {
                 this.startNode = grid[i];
                 grid[i].distance = 0;
                 grid[i].visited = true;
-            } else if (grid[i].nodeType === EndNode) {
+            } else if (grid[i].nodeType === NodeType.EndNode) {
                 this.endNode = grid[i];
             }
             if (this.startNode !== undefined && this.endNode !== undefined) break;
@@ -69,7 +79,7 @@ export default class Djikstra {
     }
 
     // Adds node's (non-wall, unvisited) neighbors to the heap
-    addNeighbors(node) {
+    addNeighbors(node: any) {
         const BOARD_HEIGHT = this.BOARD_HEIGHT, BOARD_WIDTH = this.BOARD_WIDTH,
             index = this.getIndex(node),
             top = (index - BOARD_WIDTH >= 0) ? index - BOARD_WIDTH : undefined,
@@ -78,7 +88,7 @@ export default class Djikstra {
             right = (Math.floor((index + 1) / BOARD_WIDTH) === Math.floor((index) / BOARD_WIDTH)) ? index + 1 : undefined,
             neighbors = [top, left, bottom, right];
         for (const i of neighbors) {
-            if (i !== undefined && this.grid[i].nodeType !== WallNode && !(this.grid[i].visited)) {
+            if (i !== undefined && this.grid[i].nodeType !== NodeType.WallNode && !(this.grid[i].visited)) {
                 const nextNode = this.grid[i];
                 nextNode.distance = node.distance + nextNode.weight;
                 nextNode.prev = node;
@@ -89,7 +99,7 @@ export default class Djikstra {
     }
 
     // Adds the node to the search order
-    addToSearchOrder(node) {
+    addToSearchOrder(node: any) {
         this.searchOrder.push(node.row * this.BOARD_WIDTH + node.col);
     }
 
@@ -105,7 +115,7 @@ export default class Djikstra {
     }
 
     // Returns the (array) index for a node
-    getIndex(node) {
+    getIndex(node: any) {
         return node.row*this.BOARD_WIDTH + node.col;
     }
 }

@@ -1,26 +1,35 @@
 import React, { Component } from 'react';
-import Djikstra from '../Pathfinding/Djikstra.js';
-import Node, { StartNode, EndNode, EmptyNode, WallNode } from "./Node.js";
+import Djikstra from '../Pathfinding/Djikstra';
+import Node, { NodeType } from "./Node";
 
 // WHEN UPDATING BOARD DIMENSIONS, MAKE SURE TO UPDATE _board.scss AS WELL
-export const BOARD_HEIGHT = 10, BOARD_WIDTH = 20; 
+export const BOARD_HEIGHT = 10, BOARD_WIDTH = 20;
 export const INIT_START_ROW = 1, INIT_START_COL = 1, INIT_END_ROW = 8, INIT_END_COL = 8;
+const EmptyNode = NodeType.EmptyNode, StartNode = NodeType.StartNode, EndNode = NodeType.EndNode, WallNode = NodeType.WallNode;
 
 
 // These enums used for moving/placing start, end, and walls
-const HoldNone = Symbol(0);
-const HoldStart = Symbol(1);
-const HoldEnd = Symbol(2);
-const HoldWall = Symbol(3);
+const enum Hold {
+    HoldNone, HoldStart, HoldEnd, HoldWall
+}
+
+interface IBoardProps {
+}
+
+interface IBoardState {
+    grid: any[],
+    mouseDown: boolean,
+    holdType: Hold,
+}
 
 
-export default class Board extends Component {
-    constructor(props) {
+export default class Board extends Component<IBoardProps, IBoardState> {
+    constructor(props: any) {
         super(props);
         this.state = {
             grid: [],
             mouseDown: false,
-            holdType: HoldNone
+            holdType: Hold.HoldNone
         }
     }
 
@@ -28,19 +37,19 @@ export default class Board extends Component {
         this.setState({ grid: createInitGrid() });
     }
 
-    handleMouseDown(row, col) {
-        const newState = { mouseDown: true };
+    handleMouseDown(row: number, col: number) {
+        const newState = { ...this.state, mouseDown: true };
         const nodeType = getNode(this.state.grid, row, col).nodeType;
         switch (nodeType) {
             case StartNode:
-                newState.holdType = HoldStart;
+                newState.holdType = Hold.HoldStart;
                 break;
             case EndNode:
-                newState.holdType = HoldEnd;
+                newState.holdType = Hold.HoldEnd;
                 break;
-            case EmptyNode:
+            case NodeType.EmptyNode:
             case WallNode:
-                newState.holdType = HoldWall;
+                newState.holdType = Hold.HoldWall;
                 modifyGridWall(this.state.grid, row, col);
                 newState.grid = this.state.grid;
                 break;
@@ -50,24 +59,24 @@ export default class Board extends Component {
         this.setState(newState);
     }
 
-    handleMouseEnter(row, col) {
+    handleMouseEnter(row: number, col: number) {
         if (!this.state.mouseDown) return;
 
         const grid = this.state.grid;
         const holdType = this.state.holdType;
         const nodeType = getNode(grid, row, col).nodeType;
-        if (holdType === HoldStart && nodeType === EmptyNode) {
+        if (holdType === Hold.HoldStart && nodeType === NodeType.EmptyNode) {
             modifyGridStart(grid, row, col);
-        } else if (holdType === HoldEnd && nodeType === EmptyNode) {
+        } else if (holdType === Hold.HoldEnd && nodeType === NodeType.EmptyNode) {
             modifyGridEnd(grid, row, col);
-        } else if (holdType === HoldWall && (nodeType === EmptyNode || nodeType === WallNode)) {
+        } else if (holdType === Hold.HoldWall && (nodeType === NodeType.EmptyNode || nodeType === WallNode)) {
             modifyGridWall(grid, row, col);
         }
         this.setState({ grid: grid });
     }
 
     handleMouseUp() {
-        const newState = { mouseDown: false, holdType: HoldNone };
+        const newState = { mouseDown: false, holdType: Hold.HoldNone };
         this.setState(newState);
     }
 
@@ -85,38 +94,40 @@ export default class Board extends Component {
 
     // Animates the "next"th node in the searchOrder
     // Hold "shortestPath" so can start shortest path animation when search is done
-    animateSearch(searchOrder, shortestPath, next) {
+    animateSearch(searchOrder: number[], shortestPath:number[], next:number) {
         const grid = this.state.grid;
         grid[searchOrder[next]].visited = true;
-        this.setState({grid: grid});
+        this.setState({ grid: grid });
         next++;
         if (next < searchOrder.length) {
-            setTimeout(() => {this.animateSearch(searchOrder, shortestPath, next)}, 40);
+            setTimeout(() => { this.animateSearch(searchOrder, shortestPath, next) }, 40);
         } else {
-            setTimeout(() => {this.animatePath(shortestPath, 0)}, 40);
+            setTimeout(() => { this.animatePath(shortestPath, 0) }, 40);
         }
     }
 
     // Animates the "next"th node in the shortestPath
-    animatePath(shortestPath, next) {
+    animatePath(shortestPath:number[], next:number) {
         const grid = this.state.grid;
         grid[shortestPath[next]].isPath = true;
-        this.setState({grid: grid});
+        this.setState({ grid: grid });
         next++;
         if (next < shortestPath.length) {
-            setTimeout(() => {this.animatePath(shortestPath, next)}, 100);
+            setTimeout(() => { this.animatePath(shortestPath, next) }, 100);
         }
     }
 
-    
-    renderNode(node) {
+
+    renderNode(node:any) {
         const index = node.row * BOARD_WIDTH + node.col;
         return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} wallSegments={node.wallSegments}
-            onMouseDown={(row, col) => this.handleMouseDown(row, col)}
-            onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
+            onMouseDown={(row:number, col:number) => this.handleMouseDown(row, col)}
+            onMouseEnter={(row:number, col:number) => this.handleMouseEnter(row, col)}
             onMouseUp={() => this.handleMouseUp()}
             visited={node.visited}
             isPath={node.isPath}
+            weight={node.weight}
+            prev={node.prev}
             distance={node.distance} />
     }
 
@@ -154,7 +165,7 @@ function createInitGrid() {
 }
 
 // Resets visited state of all nodes in grid
-function resetGrid(grid) {
+function resetGrid(grid: any[]) {
     for (const node of grid) {
         node.visited = false;
     }
@@ -163,21 +174,21 @@ function resetGrid(grid) {
 
 // Given a grid, makes the start node at the specified row and col
 // Ensures that all surrounding nodes are not starting nodes
-function modifyGridStart(grid, row, col) {
+function modifyGridStart(grid: any[], row:number, col:number) {
     for (const node of grid) {
         if (node.nodeType === StartNode) { node.nodeType = EmptyNode; break; }
     }
     getNode(grid, row, col).nodeType = StartNode;
 }
 
-function modifyGridEnd(grid, row, col) {
+function modifyGridEnd(grid: any[], row:number, col:number) {
     for (const node of grid) {
         if (node.nodeType === EndNode) { node.nodeType = EmptyNode; break; }
     }
     getNode(grid, row, col).nodeType = EndNode;
 }
 
-function modifyGridWall(grid, row, col) {
+function modifyGridWall(grid: any[], row:number, col:number) {
     const node = getNode(grid, row, col);
     switch (node.nodeType) {
         case EmptyNode:
@@ -204,7 +215,7 @@ function modifyGridWall(grid, row, col) {
 
 // Assuming the node at the specified row and col is a wall, will return its corresponding "wall class"
 // Used for css purposes
-function getWallSegments(grid, row, col) {
+function getWallSegments(grid: any[], row:number, col:number) {
     let ret = new Array(9);
     ret[4] = true;
 
@@ -257,7 +268,7 @@ function getWallSegments(grid, row, col) {
 }
 
 
-function getNode(grid, row, col) {
+function getNode(grid: any[], row:number, col:number) {
     if (row >= BOARD_HEIGHT || col >= BOARD_WIDTH || row < 0 || col < 0) { throw new Error("Invalid row or column.") };
     return grid[row * BOARD_WIDTH + col];
 }

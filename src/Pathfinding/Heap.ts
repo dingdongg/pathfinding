@@ -1,15 +1,16 @@
 // Utility "Heap" implementation
 export class Heap {
-    heap;
+    heap: any[];
+    getVal: any;
 
     // Constructs heap that uses getVal(node) to compare heap values
-    constructor(getVal) {
+    constructor(getVal: any) {
         this.heap = [];
         this.getVal = getVal;
     }
 
     // Inserts the value into the heap
-    insert(node) {
+    insert(node: any) {
         let index = this.heap.length;
         this.heap.push(node);
         while (index > 0) {
@@ -38,7 +39,7 @@ export class Heap {
     }
 
     // Heapifies the heap starting at the given index
-    #heapify(index) {
+    #heapify(index: number) {
         const heap = this.heap, left = this.#leftChild(index), right = this.#rightChild(index);
             const val = this.getVal(heap[index]),
             leftVal = left < heap.length ? this.getVal(heap[left]) : Infinity,
@@ -57,24 +58,24 @@ export class Heap {
     }
 
     // Swaps elements at indices a and b
-    #swap(a, b) {
+    #swap(a: number, b: number) {
         const temp = this.heap[a];
         this.heap[a] = this.heap[b];
         this.heap[b] = temp;
     }
 
     // Returns parent index of given index
-    #parent(index) {
+    #parent(index: number) {
         return Math.floor((index - 1) / 2);
     }
 
     // Returns left child index of given index
-    #leftChild(index) {
+    #leftChild(index: number) {
         return index * 2 + 1;
     }
 
     // Returns right child index of given index
-    #rightChild(index) {
+    #rightChild(index: number) {
         return index * 2 + 2;
     }
 

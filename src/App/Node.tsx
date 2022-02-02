@@ -1,14 +1,35 @@
 import React, { Component } from 'react';
-import {INIT_START_ROW, INIT_START_COL, INIT_END_ROW, INIT_END_COL} from "./Board";
+import { INIT_START_ROW, INIT_START_COL, INIT_END_ROW, INIT_END_COL } from "./Board";
 
 
 // These enums used for node type
-export const EmptyNode = Symbol(0), StartNode = Symbol(1), EndNode = Symbol(2), WallNode = Symbol(3);
+export enum NodeType {
+    EmptyNode, StartNode, EndNode, WallNode,
+}
+
+interface INodeProps {
+    onMouseDown: any,
+    onMouseUp: any,
+    onMouseEnter: any,
+    row: number,
+    col: number,
+    nodeType: NodeType,
+    wallSegments: boolean[],
+    // Pathfinding props
+    distance: number,
+    weight: number,
+    prev: Node, // Used for keeping track of shortest path
+    visited: boolean,
+    isPath: boolean, // True if this node is part of the shortest path
+}
+
+interface INodeState {
+}
 
 // Class for one "Node" (square) on the board
-export default class Node extends Component {
-    static createNode(row, col) {
-        const nodeType = (row === INIT_START_ROW && col === INIT_START_COL) ? StartNode : (row === INIT_END_ROW && col === INIT_END_COL) ? EndNode : EmptyNode;
+export default class Node extends Component<INodeProps, INodeState> {
+    static createNode(row: number, col: number) {
+        const nodeType = (row === INIT_START_ROW && col === INIT_START_COL) ? NodeType.StartNode : (row === INIT_END_ROW && col === INIT_END_COL) ? NodeType.EndNode : NodeType.EmptyNode;
         return {
             row: row,
             col: col,
@@ -35,13 +56,13 @@ export default class Node extends Component {
     render() {
         let extraClasses = "";
         switch (this.props.nodeType) {
-            case StartNode:
+            case NodeType.StartNode:
                 extraClasses = "start-node";
                 break;
-            case EndNode:
+            case NodeType.EndNode:
                 extraClasses = "end-node";
                 break;
-            case WallNode:
+            case NodeType.WallNode:
                 extraClasses = "wall-node";
                 break;
             default:

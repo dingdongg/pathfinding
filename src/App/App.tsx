@@ -1,5 +1,6 @@
-import Board from './Board.js';
-import Controls from './Controls.js';
+import React from 'react';
+import Board from './Board';
+import Controls from './Controls';
 
 function App() {
   return (
