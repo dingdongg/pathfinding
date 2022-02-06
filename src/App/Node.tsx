@@ -4,8 +4,10 @@ import { INIT_START_ROW, INIT_START_COL, INIT_END_ROW, INIT_END_COL } from "./Bo
 
 // These enums used for node type
 export enum NodeType {
-    EmptyNode, StartNode, EndNode, WallNode,
+    EmptyNode, StartNode, EndNode, WallNode, ForestNode,
 }
+
+export type BarrierNode = NodeType.WallNode | NodeType.ForestNode;
 
 interface INodeProps {
     onMouseDown: any,
@@ -14,11 +16,11 @@ interface INodeProps {
     row: number,
     col: number,
     nodeType: NodeType,
-    wallSegments: boolean[],
+    barrierSegments: boolean[],
     // Pathfinding props
     distance: number,
     weight: number,
-    prev: Node, // Used for keeping track of shortest path
+    prev: any, // Used for keeping track of shortest path
     visited: boolean,
     isPath: boolean, // True if this node is part of the shortest path
 }
@@ -44,13 +46,13 @@ export default class Node extends Component<INodeProps, INodeState> {
         }
     }
 
-    renderWallSegments() {
+    renderBarrierSegments() {
         const segments = new Array(9);
         for (let i = 0; i < segments.length; i++) {
-            const className = this.props.wallSegments[i] ? "wall-segment" : "";
+            const className = this.props.barrierSegments[i] ? "barrier-segment" : "";
             segments[i] = <div key={i} className={className}></div>
         }
-        return <div className="wall-segments">{segments}</div>
+        return <div className="barrier-segments">{segments}</div>
     }
 
     render() {
@@ -65,6 +67,9 @@ export default class Node extends Component<INodeProps, INodeState> {
             case NodeType.WallNode:
                 extraClasses = "wall-node";
                 break;
+            case NodeType.ForestNode:
+                extraClasses = "forest-node";
+                break;
             default:
         }
         extraClasses += this.props.visited ? " visited" : "";
@@ -76,7 +81,7 @@ export default class Node extends Component<INodeProps, INodeState> {
                 onMouseDown={() => this.props.onMouseDown(row, col)}
                 onMouseEnter={() => this.props.onMouseEnter(row, col)}
                 onMouseUp={() => this.props.onMouseUp()}>
-                {this.renderWallSegments()}</div>
+                {this.renderBarrierSegments()}</div>
         )
     }
 }
