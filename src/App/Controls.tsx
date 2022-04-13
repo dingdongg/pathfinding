@@ -35,7 +35,7 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
                 <button onClick={() => this.changeBarrier(NodeType.ForestNode)}>Forest</button>
             </div>
         </div>
-            <Board barrierType={this.state.barrierType}/>
+            <Board barrierType={this.state.barrierType} boardHeight={5} boardWidth={10}/>
         </div>);
     }
 }

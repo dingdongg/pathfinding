@@ -1,14 +1,12 @@
-@import "Node";
-// Need to access Node length
-$height: 10;
-$width: 20;
-
 .board {
     display: grid;
-    grid-template-rows: repeat($height, $length);
-    grid-template-columns: repeat($width, $length);
-    grid-auto-flow: dense;
+    grid-auto-flow: row;
     margin: 20px;
+
+    .board-row {
+        display: flex;
+        flex-wrap: nowrap;
+    }
 }
 
 .board-buttons {

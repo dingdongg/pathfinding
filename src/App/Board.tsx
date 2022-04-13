@@ -4,8 +4,8 @@ import Djikstra from '../Pathfinding/Djikstra';
 import Node, { NodeType, BarrierNode, INodeProps } from "./Node";
 
 // WHEN UPDATING BOARD DIMENSIONS, MAKE SURE TO UPDATE _board.scss AS WELL
-export const BOARD_HEIGHT = 10, BOARD_WIDTH = 20;
-export const INIT_START_ROW = 0, INIT_START_COL = 0, INIT_END_ROW = 0, INIT_END_COL = BOARD_WIDTH-1;
+export const BOARD_HEIGHT = 3, BOARD_WIDTH = 10;
+export const INIT_START_ROW = 0, INIT_START_COL = 0, INIT_END_ROW = 0, INIT_END_COL = 3;
 const EmptyNode = NodeType.EmptyNode, StartNode = NodeType.StartNode, EndNode = NodeType.EndNode, WallNode = NodeType.WallNode, ForestNode = NodeType.ForestNode;
 
 
@@ -15,7 +15,9 @@ const enum Hold {
 }
 
 interface IBoardProps {
-    barrierType: BarrierNode
+    barrierType: BarrierNode,
+    boardHeight: number,
+    boardWidth: number,
 }
 
 interface IBoardState {
@@ -34,7 +36,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
             holdType: Hold.HoldNone
         }
     }
-    
+
     // Initializes grid state
     initGrid() {
         this.setState({ grid: this.createInitGrid() });
@@ -42,14 +44,16 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     // Creates and returns starting grid
     createInitGrid(): INodeProps[] {
-    const grid = new Array<INodeProps>();
-    for (let row = 0; row < BOARD_HEIGHT; row++) {
-        for (let col = 0; col < BOARD_WIDTH; col++) {
-            grid.push(Node.createNode(row, col));
+        const grid = new Array<INodeProps>();
+        for (let row = 0; row < this.props.boardHeight; row++) {
+            for (let col = 0; col < this.props.boardWidth; col++) {
+                grid.push(Node.createNode(row, col));
+            }
         }
+        grid[0].nodeType = NodeType.StartNode;
+        grid[1].nodeType = NodeType.EndNode;
+        return grid;
     }
-    return grid;
-}
 
     componentDidMount() {
         this.initGrid();
@@ -133,6 +137,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     }
 
 
+    // Given a "node", returns it rendered as HTML
     renderNode(node: INodeProps) {
         const index = node.row * BOARD_WIDTH + node.col;
         return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} barrierSegments={node.barrierSegments}
@@ -146,10 +151,23 @@ export default class Board extends Component<IBoardProps, IBoardState> {
             distance={node.distance} />
     }
 
+    // "row" is an array of HTML "rendered" nodes (from renderNode). Renders them as a row
+    // "rowN" is the row number
+    renderRow(row: any[], rowN: number) {
+        return <div key={rowN} className="board-row">{row}</div>
+    }
+
     renderBoard() {
         const grid = [];
+        let currRow = [];
+        let rowN: number = 0;//Keeps track of current row number
         for (const node of this.state.grid) {
-            grid.push(this.renderNode(node));
+            currRow.push(this.renderNode(node));
+            if (currRow.length % this.props.boardWidth == 0) {
+                grid.push(this.renderRow(currRow, rowN));
+                rowN++;
+                currRow = [];
+            }
         }
         return <div className="board" onMouseLeave={() => this.handleMouseUp()}>{grid}</div>
     }
@@ -214,7 +232,7 @@ function modifyGridBarrier(grid: any[], row: number, col: number, barrierType: B
     for (let x = row - 1; x <= row + 1; x++) {
         for (let y = col - 1; y <= col + 1; y++) {
             try {
-                getNode(grid, x, y).wallSegments = getBarrierSegments(grid, x, y);
+                getNode(grid, x, y).barrierSegments = getBarrierSegments(grid, x, y);
             } catch (e) {
                 // Out of bounds exception. Do nothing
             }
@@ -280,7 +298,6 @@ function getBarrierSegments(grid: any[], row: number, col: number) {
 
 // Sets the provided node to the provided barrier type
 function setNodeBarrier(node: any, barrierType: BarrierNode) {
-    console.log("MATTHEW");
     node.nodeType = barrierType;
     switch (barrierType) {
         case ForestNode:
@@ -290,7 +307,7 @@ function setNodeBarrier(node: any, barrierType: BarrierNode) {
 }
 
 // Gets the node at the provided row and col number
-function getNode(grid: any[], row: number, col: number) {
+function getNode(grid: any[], row: number, col: number): INodeProps {
     if (row >= BOARD_HEIGHT || col >= BOARD_WIDTH || row < 0 || col < 0) { throw new Error("Invalid row or column.") };
     return grid[row * BOARD_WIDTH + col];
 }
