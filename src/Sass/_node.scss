@@ -1,4 +1,21 @@
 $length: 50px;
+@mixin barrierSegments($color: rgb(16, 157, 238)) {
+  .barrier-segments {
+    display: grid;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    grid-template-rows: 1fr 3fr 1fr;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-auto-flow: dense;
+
+    .barrier-segment {
+      background-color: $color;
+    }
+  }
+}
+
+
 
 .node {
   position: relative;
@@ -18,19 +35,11 @@ $length: 50px;
   }
 
   &.wall-node {
-    .wall-segments {
-      display: grid;
-      position: relative;
-      width: 100%;
-      height: 100%;
-      grid-template-rows: 1fr 3fr 1fr;
-      grid-template-columns: 1fr 3fr 1fr;
-      grid-auto-flow: dense;
+    @include barrierSegments(rgb(16, 157, 238));
+  }
 
-      .wall-segment {
-        background-color: rgb(16, 157, 238);
-      }
-    }
+  &.forest-node {
+    @include barrierSegments(rgb(2, 90, 2));
   }
 
   &.visited:not(&.end-node) {
