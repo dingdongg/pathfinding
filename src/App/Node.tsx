@@ -9,7 +9,7 @@ export enum NodeType {
 
 export type BarrierNode = NodeType.WallNode | NodeType.ForestNode;
 
-interface INodeProps {
+export interface INodeProps {
     onMouseDown: any,
     onMouseUp: any,
     onMouseEnter: any,
@@ -30,13 +30,16 @@ interface INodeState {
 
 // Class for one "Node" (square) on the board
 export default class Node extends Component<INodeProps, INodeState> {
-    static createNode(row: number, col: number) {
+    static createNode(row: number, col: number): INodeProps {
         const nodeType = (row === INIT_START_ROW && col === INIT_START_COL) ? NodeType.StartNode : (row === INIT_END_ROW && col === INIT_END_COL) ? NodeType.EndNode : NodeType.EmptyNode;
         return {
+            onMouseDown: null,
+            onMouseUp: null,
+            onMouseEnter: null,
             row: row,
             col: col,
             nodeType: nodeType,
-            wallSegments: new Array(9).fill(false),
+            barrierSegments: new Array(9).fill(false),
             // Pathfinding props
             distance: Infinity,
             weight: 1,

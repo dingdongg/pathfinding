@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import internal from 'stream';
 import Djikstra from '../Pathfinding/Djikstra';
-import Node, { NodeType, BarrierNode } from "./Node";
+import Node, { NodeType, BarrierNode, INodeProps } from "./Node";
 
 // WHEN UPDATING BOARD DIMENSIONS, MAKE SURE TO UPDATE _board.scss AS WELL
 export const BOARD_HEIGHT = 10, BOARD_WIDTH = 20;
@@ -19,7 +19,7 @@ interface IBoardProps {
 }
 
 interface IBoardState {
-    grid: any[],
+    grid: INodeProps[],
     mouseDown: boolean,
     holdType: Hold,
 }
@@ -37,8 +37,19 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     
     // Initializes grid state
     initGrid() {
-        this.setState({ grid: createInitGrid() });
+        this.setState({ grid: this.createInitGrid() });
     }
+
+    // Creates and returns starting grid
+    createInitGrid(): INodeProps[] {
+    const grid = new Array<INodeProps>();
+    for (let row = 0; row < BOARD_HEIGHT; row++) {
+        for (let col = 0; col < BOARD_WIDTH; col++) {
+            grid.push(Node.createNode(row, col));
+        }
+    }
+    return grid;
+}
 
     componentDidMount() {
         this.initGrid();
@@ -122,9 +133,9 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     }
 
 
-    renderNode(node: any) {
+    renderNode(node: INodeProps) {
         const index = node.row * BOARD_WIDTH + node.col;
-        return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} barrierSegments={node.wallSegments}
+        return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} barrierSegments={node.barrierSegments}
             onMouseDown={(row: number, col: number) => this.handleMouseDown(row, col)}
             onMouseEnter={(row: number, col: number) => this.handleMouseEnter(row, col)}
             onMouseUp={() => this.handleMouseUp()}
@@ -160,16 +171,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
 
 
-// Creates and returns starting grid
-function createInitGrid() {
-    const grid = [];
-    for (let row = 0; row < BOARD_HEIGHT; row++) {
-        for (let col = 0; col < BOARD_WIDTH; col++) {
-            grid.push(Node.createNode(row, col));
-        }
-    }
-    return grid;
-}
+
 
 // Resets visited state of all nodes in grid
 function resetGrid(grid: any[]) {
