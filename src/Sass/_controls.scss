@@ -16,4 +16,10 @@
     button {
         @include button(rgb(238, 245, 255), rgb(205, 224, 241), rgb(168, 194, 219));
     }
+
+    .adjust-size {
+        display: inline-grid;
+        grid-auto-flow: row;
+        justify-items: center;
+    }
 }

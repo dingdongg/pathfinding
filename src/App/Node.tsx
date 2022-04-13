@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { INIT_START_ROW, INIT_START_COL, INIT_END_ROW, INIT_END_COL } from "./Board";
 
 
 // These enums used for node type

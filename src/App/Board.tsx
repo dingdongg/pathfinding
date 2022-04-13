@@ -4,8 +4,8 @@ import Djikstra from '../Pathfinding/Djikstra';
 import Node, { NodeType, BarrierNode, INodeProps } from "./Node";
 
 // WHEN UPDATING BOARD DIMENSIONS, MAKE SURE TO UPDATE _board.scss AS WELL
-export const BOARD_HEIGHT = 3, BOARD_WIDTH = 10;
-export const INIT_START_ROW = 0, INIT_START_COL = 0, INIT_END_ROW = 0, INIT_END_COL = 3;
+// export const BOARD_HEIGHT = 3, BOARD_WIDTH = 10;
+// export const INIT_START_ROW = 0, INIT_START_COL = 0, INIT_END_ROW = 0, INIT_END_COL = 3;
 const EmptyNode = NodeType.EmptyNode, StartNode = NodeType.StartNode, EndNode = NodeType.EndNode, WallNode = NodeType.WallNode, ForestNode = NodeType.ForestNode;
 
 
@@ -50,18 +50,20 @@ export default class Board extends Component<IBoardProps, IBoardState> {
                 grid.push(Node.createNode(row, col));
             }
         }
-        grid[0].nodeType = NodeType.StartNode;
-        grid[1].nodeType = NodeType.EndNode;
+        const startRow: number = Math.floor(this.props.boardHeight / 2);
+        this.getNode(grid, startRow, Math.floor(this.props.boardWidth * 1 / 4)).nodeType = NodeType.StartNode;
+        this.getNode(grid, startRow, Math.floor(this.props.boardWidth * 3 / 4)).nodeType = NodeType.EndNode;
         return grid;
     }
 
     componentDidMount() {
+        console.log("Component did mount");
         this.initGrid();
     }
 
     handleMouseDown(row: number, col: number) {
         const newState = { ...this.state, mouseDown: true };
-        const nodeType = getNode(this.state.grid, row, col).nodeType;
+        const nodeType = this.getNode(this.state.grid, row, col).nodeType;
         switch (nodeType) {
             case StartNode:
                 newState.holdType = Hold.HoldStart;
@@ -71,7 +73,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
                 break;
             default:
                 newState.holdType = Hold.HoldBarrier;
-                modifyGridBarrier(this.state.grid, row, col, this.props.barrierType);
+                this.modifyGridBarrier(this.state.grid, row, col, this.props.barrierType);
                 newState.grid = this.state.grid;
                 break;
         }
@@ -83,13 +85,13 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
         const grid = this.state.grid;
         const holdType = this.state.holdType;
-        const nodeType = getNode(grid, row, col).nodeType;
+        const nodeType = this.getNode(grid, row, col).nodeType;
         if (holdType === Hold.HoldStart && nodeType === NodeType.EmptyNode) {
-            modifyGridStart(grid, row, col);
+            this.modifyGridStart(grid, row, col);
         } else if (holdType === Hold.HoldEnd && nodeType === NodeType.EmptyNode) {
-            modifyGridEnd(grid, row, col);
+            this.modifyGridEnd(grid, row, col);
         } else if (holdType === Hold.HoldBarrier && (nodeType !== NodeType.StartNode && nodeType !== NodeType.EndNode)) {
-            modifyGridBarrier(grid, row, col, this.props.barrierType);
+            this.modifyGridBarrier(grid, row, col, this.props.barrierType);
         }
         this.setState({ grid: grid });
     }
@@ -99,9 +101,119 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         this.setState(newState);
     }
 
+
+    // Behaviours
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Gets the node at the provided row and col number
+    getNode(grid: any[], row: number, col: number): INodeProps {
+        if (row >= this.props.boardHeight || col >= this.props.boardWidth || row < 0 || col < 0) { throw new Error("Invalid row or column.") };
+        return grid[row * this.props.boardWidth + col];
+    }
+
+    // Given a grid, makes the start node at the specified row and col
+    // Ensures that all other nodes are not starting nodes
+    modifyGridStart(grid: any[], row: number, col: number) {
+        for (const node of grid) {
+            if (node.nodeType === StartNode) { node.nodeType = EmptyNode; break; }
+        }
+        this.getNode(grid, row, col).nodeType = StartNode;
+    }
+
+    // Given a grid, makes the end node at the specified row and col
+    // Ensures that all other nodes are not end nodes
+    modifyGridEnd(grid: any[], row: number, col: number) {
+        for (const node of grid) {
+            if (node.nodeType === EndNode) { node.nodeType = EmptyNode; break; }
+        }
+        this.getNode(grid, row, col).nodeType = EndNode;
+    }
+
+    // Takes the node at the provided row/col, and makes it into BarrierType.
+    // Assumes the provided node is not a start or end node
+    modifyGridBarrier(grid: any[], row: number, col: number, barrierType: BarrierNode) {
+        const node = this.getNode(grid, row, col);
+        switch (node.nodeType) {
+            case barrierType:
+                node.nodeType = EmptyNode;
+                break;
+            default:
+                setNodeBarrier(node, barrierType);
+                break;
+        }
+
+        // Modifying surrounding wall classes
+        for (let x = row - 1; x <= row + 1; x++) {
+            for (let y = col - 1; y <= col + 1; y++) {
+                try {
+                    this.getNode(grid, x, y).barrierSegments = this.getBarrierSegments(grid, x, y);
+                } catch (e) {
+                    // Out of bounds exception. Do nothing
+                }
+            }
+        }
+
+    }
+
+    // Assuming the node at the specified row and col is a barrier, will return its corresponding "barrier class"
+    // Used for css purposes
+    getBarrierSegments(grid: any[], row: number, col: number) {
+        const barrierType = this.getNode(grid, row, col).nodeType;
+        let ret = new Array(9);
+        ret[4] = true;
+
+        // First do direct edges
+        for (let i = 1; i < ret.length; i += 2) {
+            try {
+                switch (i) {
+                    case 1:
+                        ret[i] = this.getNode(grid, row - 1, col).nodeType === barrierType;
+                        break;
+                    case 3:
+                        ret[i] = this.getNode(grid, row, col - 1).nodeType === barrierType;
+                        break;
+                    case 5:
+                        ret[i] = this.getNode(grid, row, col + 1).nodeType === barrierType;
+                        break;
+                    case 7:
+                        ret[i] = this.getNode(grid, row + 1, col).nodeType === barrierType;
+                        break;
+                    default:
+                }
+            } catch (e) {
+                // Out of bounds exception. Do nothing
+            }
+        }
+
+        // Then handle corners
+        for (let i = 0; i < ret.length; i += 2) {
+            try {
+                switch (i) {
+                    case 0:
+                        ret[i] = ret[1] && ret[3] && this.getNode(grid, row - 1, col - 1).nodeType === barrierType;
+                        break;
+                    case 2:
+                        ret[i] = ret[1] && ret[5] && this.getNode(grid, row - 1, col + 1).nodeType === barrierType;
+                        break;
+                    case 6:
+                        ret[i] = ret[3] && ret[7] && this.getNode(grid, row + 1, col - 1).nodeType === barrierType;
+                        break;
+                    case 8:
+                        ret[i] = ret[5] && ret[7] && this.getNode(grid, row + 1, col + 1).nodeType === barrierType;
+                        break;
+                    default:
+                }
+            } catch (e) {
+                // Out of bounds exception. Do nothing
+            }
+        }
+        return ret;
+    }
+
     // Finds shortest path and animates it
     findPath() {
-        const pathfinder = new Djikstra(BOARD_HEIGHT, BOARD_WIDTH), path = pathfinder.findPath(this.state.grid);
+        const pathfinder = new Djikstra(this.props.boardHeight, this.props.boardWidth), path = pathfinder.findPath(this.state.grid);
         // Need to reset state of board for animation
         resetGrid(this.state.grid);
 
@@ -110,6 +222,14 @@ export default class Board extends Component<IBoardProps, IBoardState> {
             this.animateSearch(searchOrder, shortestPath, 0);
         }
     }
+
+
+
+
+
+    // Rendering and animation
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Animates the "next"th node in the searchOrder
     // Hold "shortestPath" so can start shortest path animation when search is done
@@ -139,7 +259,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     // Given a "node", returns it rendered as HTML
     renderNode(node: INodeProps) {
-        const index = node.row * BOARD_WIDTH + node.col;
+        const index = node.row * this.props.boardWidth + node.col;
         return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} barrierSegments={node.barrierSegments}
             onMouseDown={(row: number, col: number) => this.handleMouseDown(row, col)}
             onMouseEnter={(row: number, col: number) => this.handleMouseEnter(row, col)}
@@ -169,6 +289,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
                 currRow = [];
             }
         }
+        console.log("Height | Width: " + this.props.boardHeight + " | " + this.props.boardWidth + " | " + this.state.grid.length);
         return <div className="board" onMouseLeave={() => this.handleMouseUp()}>{grid}</div>
     }
 
@@ -198,104 +319,6 @@ function resetGrid(grid: any[]) {
     }
 }
 
-
-// Given a grid, makes the start node at the specified row and col
-// Ensures that all surrounding nodes are not starting nodes
-function modifyGridStart(grid: any[], row: number, col: number) {
-    for (const node of grid) {
-        if (node.nodeType === StartNode) { node.nodeType = EmptyNode; break; }
-    }
-    getNode(grid, row, col).nodeType = StartNode;
-}
-
-function modifyGridEnd(grid: any[], row: number, col: number) {
-    for (const node of grid) {
-        if (node.nodeType === EndNode) { node.nodeType = EmptyNode; break; }
-    }
-    getNode(grid, row, col).nodeType = EndNode;
-}
-
-// Takes the node at the provided row/col, and makes it into BarrierType.
-// Assumes the provided node is not a start or end node
-function modifyGridBarrier(grid: any[], row: number, col: number, barrierType: BarrierNode) {
-    const node = getNode(grid, row, col);
-    switch (node.nodeType) {
-        case barrierType:
-            node.nodeType = EmptyNode;
-            break;
-        default:
-            setNodeBarrier(node, barrierType);
-            break;
-    }
-
-    // Modifying surrounding wall classes
-    for (let x = row - 1; x <= row + 1; x++) {
-        for (let y = col - 1; y <= col + 1; y++) {
-            try {
-                getNode(grid, x, y).barrierSegments = getBarrierSegments(grid, x, y);
-            } catch (e) {
-                // Out of bounds exception. Do nothing
-            }
-        }
-    }
-
-}
-
-// Assuming the node at the specified row and col is a barrier, will return its corresponding "barrier class"
-// Used for css purposes
-function getBarrierSegments(grid: any[], row: number, col: number) {
-    const barrierType = getNode(grid, row, col).nodeType;
-    let ret = new Array(9);
-    ret[4] = true;
-
-    // First do direct edges
-    for (let i = 1; i < ret.length; i += 2) {
-        try {
-            switch (i) {
-                case 1:
-                    ret[i] = getNode(grid, row - 1, col).nodeType === barrierType;
-                    break;
-                case 3:
-                    ret[i] = getNode(grid, row, col - 1).nodeType === barrierType;
-                    break;
-                case 5:
-                    ret[i] = getNode(grid, row, col + 1).nodeType === barrierType;
-                    break;
-                case 7:
-                    ret[i] = getNode(grid, row + 1, col).nodeType === barrierType;
-                    break;
-                default:
-            }
-        } catch (e) {
-            // Out of bounds exception. Do nothing
-        }
-    }
-
-    // Then handle corners
-    for (let i = 0; i < ret.length; i += 2) {
-        try {
-            switch (i) {
-                case 0:
-                    ret[i] = ret[1] && ret[3] && getNode(grid, row - 1, col - 1).nodeType === barrierType;
-                    break;
-                case 2:
-                    ret[i] = ret[1] && ret[5] && getNode(grid, row - 1, col + 1).nodeType === barrierType;
-                    break;
-                case 6:
-                    ret[i] = ret[3] && ret[7] && getNode(grid, row + 1, col - 1).nodeType === barrierType;
-                    break;
-                case 8:
-                    ret[i] = ret[5] && ret[7] && getNode(grid, row + 1, col + 1).nodeType === barrierType;
-                    break;
-                default:
-            }
-        } catch (e) {
-            // Out of bounds exception. Do nothing
-        }
-    }
-    return ret;
-}
-
 // Sets the provided node to the provided barrier type
 function setNodeBarrier(node: any, barrierType: BarrierNode) {
     node.nodeType = barrierType;
@@ -306,8 +329,3 @@ function setNodeBarrier(node: any, barrierType: BarrierNode) {
     }
 }
 
-// Gets the node at the provided row and col number
-function getNode(grid: any[], row: number, col: number): INodeProps {
-    if (row >= BOARD_HEIGHT || col >= BOARD_WIDTH || row < 0 || col < 0) { throw new Error("Invalid row or column.") };
-    return grid[row * BOARD_WIDTH + col];
-}

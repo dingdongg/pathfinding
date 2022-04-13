@@ -54,6 +54,12 @@ code {
   transform: translateY(4px);
 }
 
+.controls .adjust-size {
+  display: inline-grid;
+  grid-auto-flow: row;
+  justify-items: center;
+}
+
 .node {
   position: relative;
   width: 50px;
