@@ -6,7 +6,7 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -218,8 +218,17 @@ code {
   margin: 20px;
 }
 
-button {
-  display: block;
+.board-buttons {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.board-buttons button {
+  display: inline-block;
+}
+
+.board-buttons button.find-path {
   width: 90px;
   height: 60px;
   margin: 10px;
@@ -232,12 +241,35 @@ button {
   box-shadow: 0 9px #999;
 }
 
-button:hover {
+.board-buttons button.find-path:hover {
   background-color: #25b925;
 }
 
-button:active {
+.board-buttons button.find-path:active {
   background-color: #0b7c0b;
+  box-shadow: 0 5px gray;
+  transform: translateY(4px);
+}
+
+.board-buttons button.reset {
+  width: 90px;
+  height: 60px;
+  margin: 10px;
+  padding: 15px 25px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #e84f4f;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.board-buttons button.reset:hover {
+  background-color: #df2323;
+}
+
+.board-buttons button.reset:active {
+  background-color: #8f1715;
   box-shadow: 0 5px gray;
   transform: translateY(4px);
 }

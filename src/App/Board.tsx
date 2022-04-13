@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import internal from 'stream';
 import Djikstra from '../Pathfinding/Djikstra';
 import Node, { NodeType, BarrierNode } from "./Node";
 
 // WHEN UPDATING BOARD DIMENSIONS, MAKE SURE TO UPDATE _board.scss AS WELL
 export const BOARD_HEIGHT = 10, BOARD_WIDTH = 20;
-export const INIT_START_ROW = 1, INIT_START_COL = 1, INIT_END_ROW = 8, INIT_END_COL = 8;
+export const INIT_START_ROW = 0, INIT_START_COL = 0, INIT_END_ROW = 0, INIT_END_COL = BOARD_WIDTH-1;
 const EmptyNode = NodeType.EmptyNode, StartNode = NodeType.StartNode, EndNode = NodeType.EndNode, WallNode = NodeType.WallNode, ForestNode = NodeType.ForestNode;
 
 
@@ -33,9 +34,14 @@ export default class Board extends Component<IBoardProps, IBoardState> {
             holdType: Hold.HoldNone
         }
     }
+    
+    // Initializes grid state
+    initGrid() {
+        this.setState({ grid: createInitGrid() });
+    }
 
     componentDidMount() {
-        this.setState({ grid: createInitGrid() });
+        this.initGrid();
     }
 
     handleMouseDown(row: number, col: number) {
@@ -141,7 +147,10 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         return (
             <div>
                 {this.renderBoard()}
-                <button onClick={() => this.findPath()}>Find Path</button>
+                <div className="board-buttons">
+                    <button onClick={() => this.findPath()} className="find-path">Find Path</button>
+                    <button onClick={() => this.initGrid()} className="reset">Reset</button>
+                </div>
             </div>
         );
     }
@@ -151,7 +160,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
 
 
-
+// Creates and returns starting grid
 function createInitGrid() {
     const grid = [];
     for (let row = 0; row < BOARD_HEIGHT; row++) {
@@ -267,6 +276,7 @@ function getBarrierSegments(grid: any[], row: number, col: number) {
     return ret;
 }
 
+// Sets the provided node to the provided barrier type
 function setNodeBarrier(node: any, barrierType: BarrierNode) {
     console.log("MATTHEW");
     node.nodeType = barrierType;
@@ -277,6 +287,7 @@ function setNodeBarrier(node: any, barrierType: BarrierNode) {
     }
 }
 
+// Gets the node at the provided row and col number
 function getNode(grid: any[], row: number, col: number) {
     if (row >= BOARD_HEIGHT || col >= BOARD_WIDTH || row < 0 || col < 0) { throw new Error("Invalid row or column.") };
     return grid[row * BOARD_WIDTH + col];

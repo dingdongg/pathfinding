@@ -11,7 +11,20 @@ $width: 20;
     margin: 20px;
 }
 
-button {
-    display: block;
-    @include button(rgb(98, 233, 98), rgb(37, 185, 37), rgb(11, 124, 11), );
+.board-buttons {
+    display: flex;
+    align-items: center;
+    padding:20px;
+
+    button {
+        display: inline-block;
+
+        &.find-path {
+            @include button(rgb(98, 233, 98), rgb(37, 185, 37), rgb(11, 124, 11));
+        }
+
+        &.reset {
+            @include button(rgb(232, 79, 79), rgb(223, 35, 35), rgb(143, 23, 21));
+        }
+    }
 }
