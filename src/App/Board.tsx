@@ -15,15 +15,17 @@ const enum Hold {
 }
 
 interface IBoardProps {
-    barrierType: BarrierNode,
-    boardHeight: number,
-    boardWidth: number,
+    barrierType: BarrierNode
 }
 
 interface IBoardState {
     grid: INodeProps[],
     mouseDown: boolean,
     holdType: Hold,
+    boardHeight: number,
+    boardWidth: number,
+    newBoardHeight: number,
+    newBoardWidth: number
 }
 
 
@@ -33,31 +35,41 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         this.state = {
             grid: [],
             mouseDown: false,
-            holdType: Hold.HoldNone
+            holdType: Hold.HoldNone,
+            boardHeight: 5,
+            boardWidth: 8,
+            newBoardHeight: 5,
+            newBoardWidth: 8,
         }
     }
 
     // Initializes grid state
     initGrid() {
-        this.setState({ grid: this.createInitGrid() });
+        this.setState((state) => {
+            return {
+                boardHeight: state.newBoardHeight,
+                boardWidth: state.newBoardWidth,
+                grid: this.createInitGrid(state.newBoardHeight, state.newBoardWidth)
+            }
+        });
     }
 
     // Creates and returns starting grid
-    createInitGrid(): INodeProps[] {
+    createInitGrid(height: number, width: number): INodeProps[] {
+        console.log("New Grid: " + height + " | " + width);
         const grid = new Array<INodeProps>();
-        for (let row = 0; row < this.props.boardHeight; row++) {
-            for (let col = 0; col < this.props.boardWidth; col++) {
+        for (let row = 0; row < height; row++) {
+            for (let col = 0; col < width; col++) {
                 grid.push(Node.createNode(row, col));
             }
         }
-        const startRow: number = Math.floor(this.props.boardHeight / 2);
-        this.getNode(grid, startRow, Math.floor(this.props.boardWidth * 1 / 4)).nodeType = NodeType.StartNode;
-        this.getNode(grid, startRow, Math.floor(this.props.boardWidth * 3 / 4)).nodeType = NodeType.EndNode;
+        const startRow: number = Math.floor(height / 2);
+        grid[startRow * width + Math.floor(width * 1 / 4)].nodeType = NodeType.StartNode;
+        grid[startRow * width + Math.ceil(width * 3 / 4) - 1].nodeType = NodeType.EndNode;
         return grid;
     }
 
     componentDidMount() {
-        console.log("Component did mount");
         this.initGrid();
     }
 
@@ -108,8 +120,8 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     // Gets the node at the provided row and col number
     getNode(grid: any[], row: number, col: number): INodeProps {
-        if (row >= this.props.boardHeight || col >= this.props.boardWidth || row < 0 || col < 0) { throw new Error("Invalid row or column.") };
-        return grid[row * this.props.boardWidth + col];
+        if (row >= this.state.boardHeight || col >= this.state.boardWidth || row < 0 || col < 0) { throw new Error("Invalid row or column (" + row + ", " + col + ").") };
+        return grid[row * this.state.boardWidth + col];
     }
 
     // Given a grid, makes the start node at the specified row and col
@@ -213,7 +225,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     // Finds shortest path and animates it
     findPath() {
-        const pathfinder = new Djikstra(this.props.boardHeight, this.props.boardWidth), path = pathfinder.findPath(this.state.grid);
+        const pathfinder = new Djikstra(this.state.boardHeight, this.state.boardWidth), path = pathfinder.findPath(this.state.grid);
         // Need to reset state of board for animation
         resetGrid(this.state.grid);
 
@@ -256,10 +268,25 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         }
     }
 
+    renderHeightChange() {
+        return (<div className="adjust-size">
+            <button className="up" onClick={() => this.setState((state) => { return { newBoardHeight: state.newBoardHeight + 1 } })}>^</button>
+            <span>{this.state.newBoardHeight}</span>
+            <button className="down" onClick={() => this.setState((state) => { return { newBoardHeight: state.newBoardHeight - 1 } })}>V</button>
+        </div>)
+    }
+
+    renderWidthChange() {
+        return (<div className="adjust-size">
+            <button className="up" onClick={() => this.setState((state) => { return { newBoardWidth: state.newBoardWidth + 1 } })}>^</button>
+            <span>{this.state.newBoardWidth}</span>
+            <button className="down" onClick={() => this.setState((state) => { return { newBoardWidth: state.newBoardWidth - 1 } })}>V</button>
+        </div>)
+    }
 
     // Given a "node", returns it rendered as HTML
     renderNode(node: INodeProps) {
-        const index = node.row * this.props.boardWidth + node.col;
+        const index = node.row * this.state.boardWidth + node.col;
         return <Node key={index} row={node.row} col={node.col} nodeType={node.nodeType} barrierSegments={node.barrierSegments}
             onMouseDown={(row: number, col: number) => this.handleMouseDown(row, col)}
             onMouseEnter={(row: number, col: number) => this.handleMouseEnter(row, col)}
@@ -283,13 +310,12 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         let rowN: number = 0;//Keeps track of current row number
         for (const node of this.state.grid) {
             currRow.push(this.renderNode(node));
-            if (currRow.length % this.props.boardWidth == 0) {
+            if (currRow.length % this.state.boardWidth == 0) {
                 grid.push(this.renderRow(currRow, rowN));
                 rowN++;
                 currRow = [];
             }
         }
-        console.log("Height | Width: " + this.props.boardHeight + " | " + this.props.boardWidth + " | " + this.state.grid.length);
         return <div className="board" onMouseLeave={() => this.handleMouseUp()}>{grid}</div>
     }
 
@@ -300,6 +326,8 @@ export default class Board extends Component<IBoardProps, IBoardState> {
                 <div className="board-buttons">
                     <button onClick={() => this.findPath()} className="find-path">Find Path</button>
                     <button onClick={() => this.initGrid()} className="reset">Reset</button>
+                    {this.renderHeightChange()}
+                    {this.renderWidthChange()}
                 </div>
             </div>
         );
