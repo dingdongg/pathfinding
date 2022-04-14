@@ -2,6 +2,7 @@
     display: grid;
     grid-auto-flow: row;
     margin: 20px;
+    justify-content: center;
 
     .board-row {
         display: flex;
@@ -12,7 +13,7 @@
 .board-buttons {
     display: flex;
     align-items: center;
-    padding:20px;
+    padding: 5px;
 
     button {
         display: inline-block;
@@ -23,17 +24,6 @@
 
         &.reset {
             @include button(rgb(232, 79, 79), rgb(223, 35, 35), rgb(143, 23, 21));
-        }
-    }
-
-    .adjust-size {
-        height: 100%;
-        display: inline-grid;
-        grid-auto-flow: row;
-        justify-items: center;
-
-        button {
-            @include button();
         }
     }
 }

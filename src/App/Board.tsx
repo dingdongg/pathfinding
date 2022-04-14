@@ -15,7 +15,9 @@ const enum Hold {
 }
 
 interface IBoardProps {
-    barrierType: BarrierNode
+    barrierType: BarrierNode,
+    newBoardWidth: number,
+    newBoardHeight: number
 }
 
 interface IBoardState {
@@ -23,35 +25,30 @@ interface IBoardState {
     mouseDown: boolean,
     holdType: Hold,
     boardHeight: number,
-    boardWidth: number,
-    newBoardHeight: number,
-    newBoardWidth: number
+    boardWidth: number
 }
 
 
 export default class Board extends Component<IBoardProps, IBoardState> {
-    constructor(props: any) {
+    constructor(props: IBoardProps) {
         super(props);
         this.state = {
             grid: [],
             mouseDown: false,
             holdType: Hold.HoldNone,
-            boardHeight: 5,
-            boardWidth: 8,
-            newBoardHeight: 5,
-            newBoardWidth: 8,
+            boardHeight: props.newBoardHeight,
+            boardWidth: props.newBoardWidth
         }
     }
 
     // Initializes grid state
     initGrid() {
-        this.setState((state) => {
-            return {
-                boardHeight: state.newBoardHeight,
-                boardWidth: state.newBoardWidth,
-                grid: this.createInitGrid(state.newBoardHeight, state.newBoardWidth)
-            }
-        });
+        this.setState({
+            boardHeight: this.props.newBoardHeight,
+            boardWidth: this.props.newBoardWidth,
+            grid: this.createInitGrid(this.props.newBoardHeight, this.props.newBoardWidth)
+        }
+        );
     }
 
     // Creates and returns starting grid
@@ -268,22 +265,6 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         }
     }
 
-    renderHeightChange() {
-        return (<div className="adjust-size">
-            <button className="up" onClick={() => this.setState((state) => { return { newBoardHeight: state.newBoardHeight + 1 } })}>^</button>
-            <span>{this.state.newBoardHeight}</span>
-            <button className="down" onClick={() => this.setState((state) => { return { newBoardHeight: state.newBoardHeight - 1 } })}>V</button>
-        </div>)
-    }
-
-    renderWidthChange() {
-        return (<div className="adjust-size">
-            <button className="up" onClick={() => this.setState((state) => { return { newBoardWidth: state.newBoardWidth + 1 } })}>^</button>
-            <span>{this.state.newBoardWidth}</span>
-            <button className="down" onClick={() => this.setState((state) => { return { newBoardWidth: state.newBoardWidth - 1 } })}>V</button>
-        </div>)
-    }
-
     // Given a "node", returns it rendered as HTML
     renderNode(node: INodeProps) {
         const index = node.row * this.state.boardWidth + node.col;
@@ -322,13 +303,11 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     render() {
         return (
             <div>
-                {this.renderBoard()}
                 <div className="board-buttons">
                     <button onClick={() => this.findPath()} className="find-path">Find Path</button>
                     <button onClick={() => this.initGrid()} className="reset">Reset</button>
-                    {this.renderHeightChange()}
-                    {this.renderWidthChange()}
                 </div>
+                {this.renderBoard()}
             </div>
         );
     }

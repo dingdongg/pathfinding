@@ -142,6 +142,7 @@ code {
   display: grid;
   grid-auto-flow: row;
   margin: 20px;
+  justify-content: center;
 }
 
 .board .board-row {
@@ -152,7 +153,7 @@ code {
 .board-buttons {
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: 5px;
 }
 
 .board-buttons button {
@@ -201,36 +202,6 @@ code {
 
 .board-buttons button.reset:active {
   background-color: #8f1715;
-  box-shadow: 0 5px gray;
-  transform: translateY(4px);
-}
-
-.board-buttons .adjust-size {
-  height: 100%;
-  display: inline-grid;
-  grid-auto-flow: row;
-  justify-items: center;
-}
-
-.board-buttons .adjust-size button {
-  width: 90px;
-  height: 60px;
-  margin: 10px;
-  padding: 15px 25px;
-  text-align: center;
-  cursor: pointer;
-  background-color: aliceblue;
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 9px #999;
-}
-
-.board-buttons .adjust-size button:hover {
-  background-color: #cde8ff;
-}
-
-.board-buttons .adjust-size button:active {
-  background-color: #8aa6be;
   box-shadow: 0 5px gray;
   transform: translateY(4px);
 }
