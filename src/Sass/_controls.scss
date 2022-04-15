@@ -1,25 +1,93 @@
-.controls {
+.header {
     display: block;
-    width: 100%;
-    padding: 20px 40px 40px 40px;
-    background-color: rgb(179, 221, 255);
+    width: 100vw;
+    position: relative;
+    padding-top: 20px;
+    padding: 10px;
+    background-color: rgb(27, 27, 27);
+    color:white;
 
     h1 {
         padding: 10px;
         border-bottom: 1px grey solid;
     }
 
-    .placements {
-        display: inline-flex;
-    }
-    
     button {
         @include button(rgb(238, 245, 255), rgb(205, 224, 241), rgb(168, 194, 219));
     }
 
-    .adjust-size {
-        display: inline-grid;
-        grid-auto-flow: row;
-        justify-items: center;
+    .controls {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        .divider {
+            height: 100px;
+            border: 2px solid black;
+        }
+
+        .barrier-types {
+            .selected {
+                @include button($normal: rgb(91, 159, 255), $hover: rgb(98, 173, 239), $click: rgb(43, 145, 241), $shadow: rgb(130, 157, 185));
+            }
+        }
+
+        .adjust-size {
+            display: inline-grid;
+            grid-auto-flow: column;
+            justify-items: center;
+            align-items: center;
+
+            button {
+                height: 40px;
+                width: 40px;
+                padding: 10px;
+                text-align: center;
+                margin-top: 5px;
+            }
+
+            .adjust-height,
+            .adjust-width {
+                margin: 5px 10px;
+            }
+
+            .adjust-height {
+                display: inline-grid;
+                grid-auto-flow: row;
+                justify-items: center;
+            }
+
+            .adjust-width {
+                display: inline-grid;
+                grid-template-columns: 2fr 1fr 2fr;
+                grid-template-rows: 1fr 3fr;
+                gap: 0;
+
+                .descriptor {
+                    grid-column: 1/4;
+                    grid-row: 1;
+                    text-align: center;
+                }
+
+                .left {
+                    grid-column: 1;
+                    grid-row: 2;
+                }
+
+                .value {
+                    grid-column: 2;
+                    grid-row: 2;
+                    margin: auto;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .right {
+                    grid-column: 3;
+                    grid-row: 2;
+                }
+            }
+        }
     }
 }

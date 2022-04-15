@@ -53,7 +53,6 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     // Creates and returns starting grid
     createInitGrid(height: number, width: number): INodeProps[] {
-        console.log("New Grid: " + height + " | " + width);
         const grid = new Array<INodeProps>();
         for (let row = 0; row < height; row++) {
             for (let col = 0; col < width; col++) {
