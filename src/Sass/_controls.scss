@@ -28,8 +28,12 @@
         }
 
         .barrier-types {
-            .selected {
+            .selected.wall {
                 @include button($normal: rgb(91, 159, 255), $hover: rgb(98, 173, 239), $click: rgb(43, 145, 241), $shadow: rgb(130, 157, 185));
+            }
+
+            .selected.forest {
+                @include button($normal: rgb(21, 118, 55), $hover: rgb(14, 104, 46), $click: rgb(11, 75, 33), $shadow: rgb(65, 96, 76));
             }
         }
 

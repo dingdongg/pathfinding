@@ -66,7 +66,7 @@ code {
   border: 2px solid black;
 }
 
-.header .controls .barrier-types .selected {
+.header .controls .barrier-types .selected.wall {
   width: 70px;
   height: 45px;
   margin: 10px;
@@ -79,12 +79,35 @@ code {
   box-shadow: 0 9px #829db9;
 }
 
-.header .controls .barrier-types .selected:hover {
+.header .controls .barrier-types .selected.wall:hover {
   background-color: #62adef;
 }
 
-.header .controls .barrier-types .selected:active {
+.header .controls .barrier-types .selected.wall:active {
   background-color: #2b91f1;
+  box-shadow: 0 5px gray;
+  transform: translateY(4px);
+}
+
+.header .controls .barrier-types .selected.forest {
+  width: 70px;
+  height: 45px;
+  margin: 10px;
+  padding: 5px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #157637;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #41604c;
+}
+
+.header .controls .barrier-types .selected.forest:hover {
+  background-color: #0e682e;
+}
+
+.header .controls .barrier-types .selected.forest:active {
+  background-color: #0b4b21;
   box-shadow: 0 5px gray;
   transform: translateY(4px);
 }

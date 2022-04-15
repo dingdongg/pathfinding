@@ -81,10 +81,10 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
                 <div className="controls">
                     <div className="barrier-types">
                         <button onClick={() => this.changeBarrier(NodeType.WallNode)}
-                            className={this.state.barrierType == NodeType.WallNode ? "selected" : ""}>
-                            Wall</button>
+                            className={this.state.barrierType == NodeType.WallNode ? "selected wall" : ""}>
+                            River</button>
                         <button onClick={() => this.changeBarrier(NodeType.ForestNode)}
-                            className={this.state.barrierType == NodeType.ForestNode ? "selected" : ""}>
+                            className={this.state.barrierType == NodeType.ForestNode ? "selected forest" : ""}>
                             Forest</button>
                     </div>
                     <div className="divider"></div>
