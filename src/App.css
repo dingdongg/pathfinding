@@ -112,6 +112,31 @@ code {
   transform: translateY(4px);
 }
 
+.header .controls .algorithms .selected {
+  width: 70px;
+  height: 45px;
+  margin: 10px;
+  padding: 5px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #e4ff5e;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #b2b982;
+  width: 90px;
+  height: 45px;
+}
+
+.header .controls .algorithms .selected:hover {
+  background-color: #f1fd46;
+}
+
+.header .controls .algorithms .selected:active {
+  background-color: #fbff00;
+  box-shadow: 0 5px gray;
+  transform: translateY(4px);
+}
+
 .header .controls .adjust-size {
   display: inline-grid;
   grid-auto-flow: column;
@@ -222,7 +247,7 @@ code {
 }
 
 .node.path-node.visited {
-  background-color: blue !important;
+  background-color: #287bb6 !important;
 }
 
 @keyframes visitAnimation {
@@ -232,7 +257,7 @@ code {
     z-index: 2;
   }
   10% {
-    transform: scale(1.2);
+    transform: scale(1.15);
     background-color: #35aa35;
   }
   99% {

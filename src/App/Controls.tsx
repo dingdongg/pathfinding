@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import Board from "./Board";
 import Node, { NodeType, BarrierNode } from "./Node";
+import { Algorithm } from "../Pathfinding/Pathfinder";
 interface IControlsProps {
 }
 
 interface IControlsState {
     barrierType: BarrierNode,
     boardHeight: number,
-    boardWidth: number
+    boardWidth: number,
+    algorithm: Algorithm,
 }
 
 export default class Controls extends Component<IControlsProps, IControlsState> {
@@ -21,7 +23,8 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
         this.state = {
             barrierType: NodeType.WallNode,
             boardHeight: 5,
-            boardWidth: 9
+            boardWidth: 9,
+            algorithm: Algorithm.Djikstra,
         }
     }
 
@@ -79,18 +82,9 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
             <div className="header">
                 <h1>Pathfinder</h1>
                 <div className="controls">
-                    <div className="barrier-types">
-                        <button onClick={() => this.changeBarrier(NodeType.WallNode)}
-                            className={this.state.barrierType == NodeType.WallNode ? "selected wall" : ""}>
-                            River</button>
-                        <button onClick={() => this.changeBarrier(NodeType.ForestNode)}
-                            className={this.state.barrierType == NodeType.ForestNode ? "selected forest" : ""}>
-                            Forest</button>
-                    </div>
+                    {this.renderBarrierTypes()}
                     <div className="divider"></div>
-                    <div>
-                        Algorithms
-                    </div>
+                    {this.renderAlgorithms()}
                     <div className="divider"></div>
                     <div className="adjust-size">
                         {this.renderHeightChange()}
@@ -100,7 +94,33 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
             </div>
             <Board barrierType={this.state.barrierType}
                 newBoardHeight={this.state.boardHeight}
-                newBoardWidth={this.state.boardWidth} />
+                newBoardWidth={this.state.boardWidth}
+                algorithm={this.state.algorithm} />
         </div>);
+    }
+
+    private renderBarrierTypes() {
+        return <div className="barrier-types">
+            <button onClick={() => this.changeBarrier(NodeType.WallNode)}
+                className={this.state.barrierType == NodeType.WallNode ? "selected wall" : ""}>
+                River</button>
+            <button onClick={() => this.changeBarrier(NodeType.ForestNode)}
+                className={this.state.barrierType == NodeType.ForestNode ? "selected forest" : ""}>
+                Forest</button>
+        </div>;
+    }
+
+    private renderAlgorithms() {
+        return <div className="algorithms">
+            <button onClick={() => this.changeAlgorithm(Algorithm.Djikstra)}
+                className={this.state.algorithm == Algorithm.Djikstra ? "selected djikstra's" : ""}>
+                Djikstra's</button>
+            <button onClick={() => this.changeAlgorithm(Algorithm.ASharp)}
+                className={this.state.algorithm == Algorithm.ASharp ? "selected a-sharp" : ""}>
+                A#</button>
+        </div>;
+    }
+    changeAlgorithm(algorithm: Algorithm): void {
+        this.setState({ algorithm: algorithm });
     }
 }

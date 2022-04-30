@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import internal from 'stream';
-import Djikstra from '../Pathfinding/Djikstra';
+import {Algorithm, Pathfinder} from '../Pathfinding/Pathfinder';
 import Node, { NodeType, BarrierNode, INodeProps } from "./Node";
 
 // WHEN UPDATING BOARD DIMENSIONS, MAKE SURE TO UPDATE _board.scss AS WELL
@@ -16,6 +15,7 @@ const enum Hold {
 
 interface IBoardProps {
     barrierType: BarrierNode,
+    algorithm: Algorithm,
     newBoardWidth: number,
     newBoardHeight: number
 }
@@ -221,7 +221,8 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     // Finds shortest path and animates it
     findPath() {
-        const pathfinder = new Djikstra(this.state.boardHeight, this.state.boardWidth), path = pathfinder.findPath(this.state.grid);
+        const pathfinder = Pathfinder.createPathfinder(this.props.algorithm, this.state.boardHeight, this.state.boardWidth);
+        const path = pathfinder.findPath(this.state.grid);
         // Need to reset state of board for animation
         resetGrid(this.state.grid);
 
