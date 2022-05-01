@@ -331,7 +331,7 @@ function setNodeBarrier(node: any, barrierType: BarrierNode) {
     node.nodeType = barrierType;
     switch (barrierType) {
         case ForestNode:
-            node.weight = 5;
+            node.weight = 2;
             break;
     }
 }

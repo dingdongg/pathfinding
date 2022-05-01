@@ -24,6 +24,13 @@ export class Heap {
         }
     }
 
+    // Inserts a list of values into heap
+    insertMany(nodes: any[]) {
+        for (const node of nodes) {
+            this.insert(node);
+        }
+    }
+
     // Returns and removes the min element of heap
     pop() {
         const heap = this.heap, ret = heap[0];

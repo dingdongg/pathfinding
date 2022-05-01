@@ -3,11 +3,8 @@ import { Heap } from './Heap';
 
 test('basic heap test', () => {
     const heap: Heap = new Heap((val: number) => val);
-    heap.insert(10);
-    heap.insert(2);
-    heap.insert(1);
-    heap.insert(5);
-    heap.insert(7);
+    const values: number[] = [10,2,1,5,7];
+    heap.insertMany(values);
     expect(heap.pop()).toBe(1);
     expect(heap.length()).toBe(4);
     expect(heap.pop()).toBe(2);
@@ -19,3 +16,14 @@ test('basic heap test', () => {
     expect(heap.pop()).toBe(10);
     expect(heap.length()).toBe(0);
 });
+
+test('repeated values test', () => {
+    const heap: Heap = new Heap((val: number) => val);
+    const values: number[] = [1,3,5,3,6,7,3,8,2,2,9,4,3,4]
+    const expected: number[] = [...values].sort();
+    heap.insertMany(values);
+    for (let i = 0; i < expected.length; i++) {
+        expect(heap.pop()).toBe(expected[i]);
+        expect(heap.length()).toBe(values.length - i - 1);
+    }
+}) 
