@@ -45,6 +45,15 @@
                     $shadow: rgb(65, 96, 76)
                 );
             }
+
+            .selected.none {
+                @include button(
+                    $normal: rgb(150, 150, 150),
+                    $hover: rgb(158, 158, 158),
+                    $click: rgb(100, 100, 100),
+                    $shadow: rgb(120, 120, 120),
+                );
+            }
         }
 
         .algorithms {

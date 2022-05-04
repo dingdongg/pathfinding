@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Board from "./Board";
-import {Node, NodeType, BarrierNode } from "./Node";
+import { Node, NodeType, BarrierNode } from "./Node";
 import { Algorithm } from "../Pathfinding/Pathfinder";
 interface IControlsProps {
 }
@@ -107,6 +107,9 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
             <button onClick={() => this.changeBarrier(NodeType.ForestNode)}
                 className={this.state.barrierType == NodeType.ForestNode ? "selected forest" : ""}>
                 Forest</button>
+            <button onClick={() => this.changeBarrier(NodeType.EmptyNode)}
+                className={this.state.barrierType == NodeType.EmptyNode ? "selected none" : ""}>
+                None</button>
         </div>;
     }
 

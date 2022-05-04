@@ -6,7 +6,7 @@ export enum NodeType {
     EmptyNode, StartNode, EndNode, WallNode, ForestNode,
 }
 
-export type BarrierNode = NodeType.WallNode | NodeType.ForestNode;
+export type BarrierNode = NodeType.WallNode | NodeType.ForestNode | NodeType.EmptyNode;
 
 export interface INodeProps {
     onMouseDown: any,
