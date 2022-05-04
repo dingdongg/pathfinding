@@ -28,7 +28,7 @@ interface INodeState {
 }
 
 // Class for one "Node" (square) on the board
-export default class Node extends Component<INodeProps, INodeState> {
+export class Node extends Component<INodeProps, INodeState> {
     static createNode(row: number, col: number): INodeProps {
         return {
             onMouseDown: null,

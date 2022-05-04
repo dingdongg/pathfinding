@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {Algorithm, Pathfinder} from '../Pathfinding/Pathfinder';
-import Node, { NodeType, BarrierNode, INodeProps } from "./Node";
+import { Algorithm, Pathfinder } from '../Pathfinding/Pathfinder';
+import { Node, NodeType, BarrierNode, INodeProps } from "./Node";
 
 // WHEN UPDATING BOARD DIMENSIONS, MAKE SURE TO UPDATE _board.scss AS WELL
 // export const BOARD_HEIGHT = 3, BOARD_WIDTH = 10;

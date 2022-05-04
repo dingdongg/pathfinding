@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Board from "./Board";
-import Node, { NodeType, BarrierNode } from "./Node";
+import {Node, NodeType, BarrierNode } from "./Node";
 import { Algorithm } from "../Pathfinding/Pathfinder";
 interface IControlsProps {
 }
