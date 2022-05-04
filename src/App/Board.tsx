@@ -235,13 +235,13 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         const pathfinder = Pathfinder.createPathfinder(this.props.algorithm, this.state.boardHeight, this.state.boardWidth);
         const path = pathfinder.findPath(this.state.grid);
         // Need to reset state of board for animation
-        resetGrid(this.state.grid);
-        this.setState({searchState: SearchState.Animating});
+        softResetGrid(this.state.grid);
+        this.setState({ searchState: SearchState.Animating });
 
         const searchOrder = path.searchOrder, shortestPath = path.shortestPath;
         if (searchOrder.length > 0) {
-            setTimeout(() => { this.setState({searchState: SearchState.Animating})}, 0);
-            setTimeout(() => { this.animateSearch(searchOrder, shortestPath, 0)}, 0);
+            setTimeout(() => { this.setState({ searchState: SearchState.Animating }) }, 0);
+            setTimeout(() => { this.animateSearch(searchOrder, shortestPath, 0) }, 0);
         }
     }
 
@@ -278,7 +278,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         if (next < shortestPath.length) {
             setTimeout(() => { this.animatePath(shortestPath, next) }, 100);
         } else {
-            this.setState({searchState: SearchState.Done});
+            this.setState({ searchState: SearchState.Done });
         }
     }
 
@@ -322,6 +322,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
             <div>
                 <div className="board-buttons">
                     <button onClick={() => this.findPath()} className="find-path">Find Path</button>
+                    <button onClick={() => { softResetGrid(this.state.grid); this.setState({ "searchState": SearchState.None }) }} className="soft-reset">Soft Reset</button>
                     <button onClick={() => this.initGrid()} className="reset">Reset</button>
                 </div>
                 {this.renderBoard()}
@@ -336,10 +337,13 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
 
 
-// Resets visited state of all nodes in grid
-function resetGrid(grid: any[]) {
+// Resets state of board, but keeps nodeTypes the same
+function softResetGrid(grid: any[]) {
     for (const node of grid) {
         node.visited = false;
+        node.prev = null;
+        node.distance = Infinity;
+        node.isPath = false;
     }
 }
 

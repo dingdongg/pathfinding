@@ -21,11 +21,15 @@
         display: inline-block;
 
         &.find-path {
-            @include button(rgb(98, 233, 98), rgb(37, 185, 37), rgb(11, 124, 11));
+            @include button(rgb(98, 233, 98), rgb(37, 185, 37), rgb(11, 124, 11), rgb(105, 162, 105), rgb(49, 72, 49));
+        }
+
+        &.soft-reset {
+            @include button(rgb(232, 239, 99), rgb(237, 240, 65),rgb(255, 242, 0), rgb(211, 206, 123), rgb(162, 163, 83));
         }
 
         &.reset {
-            @include button(rgb(232, 79, 79), rgb(223, 35, 35), rgb(143, 23, 21));
+            @include button(rgb(232, 79, 79), rgb(223, 35, 35), rgb(143, 23, 21), rgb(169, 87, 87), rgb(67, 24, 24));
         }
     }
 }

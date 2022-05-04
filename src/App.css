@@ -306,7 +306,7 @@ code {
   background-color: #62e962;
   border: none;
   border-radius: 15px;
-  box-shadow: 0 9px #999;
+  box-shadow: 0 9px #69a269;
 }
 
 .board-buttons button.find-path:hover {
@@ -315,7 +315,30 @@ code {
 
 .board-buttons button.find-path:active {
   background-color: #0b7c0b;
-  box-shadow: 0 5px gray;
+  box-shadow: 0 5px #314831;
+  transform: translateY(4px);
+}
+
+.board-buttons button.soft-reset {
+  width: 70px;
+  height: 45px;
+  margin: 10px;
+  padding: 5px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #e8ef63;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #d3ce7b;
+}
+
+.board-buttons button.soft-reset:hover {
+  background-color: #edf041;
+}
+
+.board-buttons button.soft-reset:active {
+  background-color: #fff200;
+  box-shadow: 0 5px #a2a353;
   transform: translateY(4px);
 }
 
@@ -329,7 +352,7 @@ code {
   background-color: #e84f4f;
   border: none;
   border-radius: 15px;
-  box-shadow: 0 9px #999;
+  box-shadow: 0 9px #a95757;
 }
 
 .board-buttons button.reset:hover {
@@ -338,7 +361,7 @@ code {
 
 .board-buttons button.reset:active {
   background-color: #8f1715;
-  box-shadow: 0 5px gray;
+  box-shadow: 0 5px #431818;
   transform: translateY(4px);
 }
 
