@@ -13,6 +13,13 @@ const enum Hold {
     HoldNone, HoldStart, HoldEnd, HoldBarrier
 }
 
+// These enums are used to denote the "animation" state of the board
+const enum SearchState {
+    None = 0,
+    Animating = 1,
+    Done = 2,
+}
+
 interface IBoardProps {
     barrierType: BarrierNode,
     algorithm: Algorithm,
@@ -25,7 +32,8 @@ interface IBoardState {
     mouseDown: boolean,
     holdType: Hold,
     boardHeight: number,
-    boardWidth: number
+    boardWidth: number,
+    searchState: SearchState, // Current state of search animation
 }
 
 
@@ -37,7 +45,8 @@ export default class Board extends Component<IBoardProps, IBoardState> {
             mouseDown: false,
             holdType: Hold.HoldNone,
             boardHeight: props.newBoardHeight,
-            boardWidth: props.newBoardWidth
+            boardWidth: props.newBoardWidth,
+            searchState: SearchState.None,
         }
     }
 
@@ -46,7 +55,8 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         this.setState({
             boardHeight: this.props.newBoardHeight,
             boardWidth: this.props.newBoardWidth,
-            grid: this.createInitGrid(this.props.newBoardHeight, this.props.newBoardWidth)
+            grid: this.createInitGrid(this.props.newBoardHeight, this.props.newBoardWidth),
+            searchState: SearchState.None,
         }
         );
     }
@@ -70,6 +80,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     }
 
     handleMouseDown(row: number, col: number) {
+        if (this.state.searchState !== SearchState.None) return;
         const newState = { ...this.state, mouseDown: true };
         const nodeType = this.getNode(this.state.grid, row, col).nodeType;
         switch (nodeType) {
@@ -225,10 +236,12 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         const path = pathfinder.findPath(this.state.grid);
         // Need to reset state of board for animation
         resetGrid(this.state.grid);
+        this.setState({searchState: SearchState.Animating});
 
         const searchOrder = path.searchOrder, shortestPath = path.shortestPath;
         if (searchOrder.length > 0) {
-            this.animateSearch(searchOrder, shortestPath, 0);
+            setTimeout(() => { this.setState({searchState: SearchState.Animating})}, 0);
+            setTimeout(() => { this.animateSearch(searchOrder, shortestPath, 0)}, 0);
         }
     }
 
@@ -243,6 +256,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     // Animates the "next"th node in the searchOrder
     // Hold "shortestPath" so can start shortest path animation when search is done
     animateSearch(searchOrder: number[], shortestPath: number[], next: number) {
+        if (this.state.searchState !== SearchState.Animating) return; // Edge case where board reset before animation done
         const grid = this.state.grid;
         grid[searchOrder[next]].visited = true;
         this.setState({ grid: grid });
@@ -256,12 +270,15 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     // Animates the "next"th node in the shortestPath
     animatePath(shortestPath: number[], next: number) {
+        if (this.state.searchState !== SearchState.Animating) return; // Edge case where board reset before animation done
         const grid = this.state.grid;
         grid[shortestPath[next]].isPath = true;
         this.setState({ grid: grid });
         next++;
         if (next < shortestPath.length) {
             setTimeout(() => { this.animatePath(shortestPath, next) }, 100);
+        } else {
+            this.setState({searchState: SearchState.Done});
         }
     }
 
