@@ -14,9 +14,9 @@ interface IControlsState {
 
 export default class Controls extends Component<IControlsProps, IControlsState> {
     readonly MIN_HEIGHT: number = 3;
-    readonly MAX_HEIGHT: number = 10;
+    readonly MAX_HEIGHT: number = 20;
     readonly MIN_WIDTH: number = 3;
-    readonly MAX_WIDTH: number = 15;
+    readonly MAX_WIDTH: number = 25;
 
     constructor(props: any) {
         super(props);

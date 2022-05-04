@@ -1,9 +1,10 @@
 .board {
     display: grid;
     grid-auto-flow: row;
-    margin: 20px;
+    margin: auto;
     margin-top: 5px;
     justify-content: center;
+    width: 100vw;
 
     .board-row {
         display: flex;
