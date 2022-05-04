@@ -142,21 +142,21 @@ code {
   padding: 5px;
   text-align: center;
   cursor: pointer;
-  background-color: #e4ff5e;
+  background-color: #5be86c;
   border: none;
   border-radius: 15px;
-  box-shadow: 0 9px #b2b982;
+  box-shadow: 0 9px #7ace83;
   width: 90px;
   height: 45px;
 }
 
 .header .controls .algorithms .selected:hover {
-  background-color: #f1fd46;
+  background-color: #2cc23d;
 }
 
 .header .controls .algorithms .selected:active {
-  background-color: #fbff00;
-  box-shadow: 0 5px gray;
+  background-color: #298734;
+  box-shadow: 0 5px #2c472e;
   transform: translateY(4px);
 }
 

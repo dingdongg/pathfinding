@@ -59,10 +59,11 @@
         .algorithms {
             .selected {
                 @include button(
-                    $normal: rgb(228, 255, 94),
-                    $hover: rgb(241, 253, 70),
-                    $click: rgb(251, 255, 0),
-                    $shadow: rgb(178, 185, 130)
+                    $normal: rgb(91, 232, 108),
+                    $hover: rgb(44, 194, 61),
+                    $click: rgb(41, 135, 52),
+                    $shadow: rgb(122, 206, 131),
+                    $shadowClick: rgb(44, 71, 46)
                 );
                 width: 90px;
                 height: 45px;
