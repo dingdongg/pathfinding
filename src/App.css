@@ -299,6 +299,8 @@ code {
   display: grid;
   grid-auto-flow: row;
   margin: auto;
+  margin-top: 20px;
+  margin-bottom: 60px;
   margin-top: 5px;
   justify-content: center;
   width: 100vw;
