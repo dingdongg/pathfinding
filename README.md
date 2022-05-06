@@ -17,3 +17,4 @@ Welcome to my pathfinder visualizer! I Wanted to create something that would hel
 * Add "information" button, with details on how to use the controls
 * Change the way path is displayed (currently path is almost invisible if it goes through forest)
 * Add graphics to start and end nodes (optionally for nodes as well)
+* Add ability to change pathfinding speed
