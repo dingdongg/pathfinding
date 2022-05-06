@@ -1,13 +1,15 @@
 {
   "files": {
-    "main.css": "/pathfinding/static/css/main.8118240b.css",
+    "main.css": "/pathfinding/static/css/main.e42d8a61.css",
     "main.js": "/pathfinding/static/js/main.8777abef.js",
+    "static/media/PlusheenCat.png": "/pathfinding/static/media/PlusheenCat.045957df33d39e89371d.png",
+    "static/media/IceCream.png": "/pathfinding/static/media/IceCream.42f4ab21a68f35d91c21.png",
     "index.html": "/pathfinding/index.html",
-    "main.8118240b.css.map": "/pathfinding/static/css/main.8118240b.css.map",
+    "main.e42d8a61.css.map": "/pathfinding/static/css/main.e42d8a61.css.map",
     "main.8777abef.js.map": "/pathfinding/static/js/main.8777abef.js.map"
   },
   "entrypoints": [
-    "static/css/main.8118240b.css",
+    "static/css/main.e42d8a61.css",
     "static/js/main.8777abef.js"
   ]
 }
