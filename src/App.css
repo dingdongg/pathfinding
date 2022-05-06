@@ -16,6 +16,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+.overlay, .node.start-node::after, .node.end-node::after, .node.wall-node .barrier-segments .barrier-segment::after, .node.forest-node .barrier-segments .barrier-segment::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 .header {
   display: block;
   width: 100vw;
@@ -228,11 +237,27 @@ code {
 }
 
 .node.start-node {
-  background-color: #fff12b;
+  position: relative;
+}
+
+.node.start-node::after {
+  background-image: url("../public/images/PlusheenCat.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: scaleX(-1);
 }
 
 .node.end-node {
-  background-color: #f04b4b;
+  position: relative;
+}
+
+.node.end-node::after {
+  background-image: url("../public/images/IceCream.png");
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: scaleX(-1);
 }
 
 .node.wall-node .barrier-segments {
@@ -246,7 +271,13 @@ code {
 }
 
 .node.wall-node .barrier-segments .barrier-segment {
+  position: relative;
+}
+
+.node.wall-node .barrier-segments .barrier-segment::after {
   background-color: #109dee;
+  opacity: 0.85;
+  overflow: hidden;
 }
 
 .node.forest-node .barrier-segments {
@@ -260,7 +291,13 @@ code {
 }
 
 .node.forest-node .barrier-segments .barrier-segment {
+  position: relative;
+}
+
+.node.forest-node .barrier-segments .barrier-segment::after {
   background-color: #025a02;
+  opacity: 0.85;
+  overflow: hidden;
 }
 
 .node.visited:not(.node.end-node) {
