@@ -391,6 +391,36 @@ code {
   transform: translateY(4px);
 }
 
+.board-buttons button {
+  width: 70px;
+  height: 45px;
+  margin: 10px;
+  padding: 5px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #646464;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px gray;
+}
+
+.board-buttons button:active {
+  background-color: #646464;
+  box-shadow: 0 5px gray;
+  transform: translateY(4px);
+}
+
+.board-buttons button.show-dist{
+  background-color: #2b91f1;
+  box-shadow: 0 9px gray;
+}
+
+.board-buttons button.show-dist:active {
+  background-color: #2b91f1;
+  box-shadow: 0 5px gray;
+  transform: translateY(4px);
+}
+
 .App {
   display: flex;
   justify-content: center;

@@ -1,12 +1,12 @@
 import { Heap } from "./Heap";
 import { NodeType } from "../App/Node";
-import {Pathfinder, PathInfo} from "./Pathfinder";
+import {Pathfinder, PathInfo, SearchedNode} from "./Pathfinder";
 
 // Pathfinding class for Djikstra's algorithm
 export class Djikstra implements Pathfinder {
     BOARD_HEIGHT: number;
     BOARD_WIDTH: number;
-    searchOrder: any;
+    searchOrder: SearchedNode[] = [];
     shortestPath: any;
     pathFound: any;
     heap: any;
@@ -100,7 +100,11 @@ export class Djikstra implements Pathfinder {
 
     // Adds the node to the search order
     private addToSearchOrder(node: any) {
-        this.searchOrder.push(node.row * this.BOARD_WIDTH + node.col);
+        this.searchOrder.push(
+            {
+                index: node.row * this.BOARD_WIDTH + node.col,
+                distance: node.distance,
+            });
     }
 
     // Initializes "this.shortestPath"

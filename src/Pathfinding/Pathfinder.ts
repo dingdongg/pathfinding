@@ -3,9 +3,15 @@
 import {Djikstra} from "./Djikstra";
 
 export interface PathInfo {
-    searchOrder: number[], // Order in which nodes were searched
+    searchOrder: SearchedNode[], // Order in which nodes were searched
     shortestPath: number[], // Order of nodes in shortest path
     pathFound: boolean, // False if no path was found
+}
+
+// Encapsulates a node visited by the pathfinder
+export interface SearchedNode {
+    index: number, // index on the grid
+    distance: number, // updated distance
 }
 
 export abstract class Pathfinder {

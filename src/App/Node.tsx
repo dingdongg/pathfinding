@@ -16,6 +16,7 @@ export interface INodeProps {
     col: number,
     nodeType: NodeType,
     barrierSegments: boolean[],
+    showDist: boolean,
     // Pathfinding props
     distance: number,
     weight: number,
@@ -38,6 +39,7 @@ export class Node extends Component<INodeProps, INodeState> {
             col: col,
             nodeType: NodeType.EmptyNode,
             barrierSegments: new Array(9).fill(false),
+            showDist: false,
             // Pathfinding props
             distance: Infinity,
             weight: 1,
@@ -76,12 +78,15 @@ export class Node extends Component<INodeProps, INodeState> {
         extraClasses += this.props.visited ? " visited" : "";
         extraClasses += this.props.isPath ? " path-node" : "";
         const row = this.props.row, col = this.props.col;
+        
+        let displayValue = this.props.showDist ? this.props.distance : ""
 
         return (
             <div className={`node ${extraClasses}`}
                 onMouseDown={() => this.props.onMouseDown(row, col)}
                 onMouseEnter={() => this.props.onMouseEnter(row, col)}
                 onMouseUp={() => this.props.onMouseUp()}>
+                {displayValue}
                 {this.renderBarrierSegments()}</div>
         )
     }

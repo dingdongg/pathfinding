@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Algorithm, Pathfinder } from '../Pathfinding/Pathfinder';
+import { Algorithm, Pathfinder, SearchedNode } from '../Pathfinding/Pathfinder';
 import { Node, NodeType, BarrierNode, INodeProps } from "./Node";
 
 // WHEN UPDATING BOARD DIMENSIONS, MAKE SURE TO UPDATE _board.scss AS WELL
@@ -34,6 +34,7 @@ interface IBoardState {
     boardHeight: number,
     boardWidth: number,
     searchState: SearchState, // Current state of search animation
+    showDist: boolean,
 }
 
 
@@ -47,6 +48,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
             boardHeight: props.newBoardHeight,
             boardWidth: props.newBoardWidth,
             searchState: SearchState.None,
+            showDist: false,
         }
     }
 
@@ -253,12 +255,13 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Animates the "next"th node in the searchOrder
+    // Animates the "next"th node in the searchedNodes
     // Hold "shortestPath" so can start shortest path animation when search is done
-    animateSearch(searchOrder: number[], shortestPath: number[], next: number) {
+    animateSearch(searchOrder: SearchedNode[], shortestPath: number[], next: number) {
         if (this.state.searchState !== SearchState.Animating) return; // Edge case where board reset before animation done
         const grid = this.state.grid;
-        grid[searchOrder[next]].visited = true;
+        grid[searchOrder[next].index].visited = true;
+        grid[searchOrder[next].index].distance = searchOrder[next].distance;
         this.setState({ grid: grid });
         next++;
         if (next < searchOrder.length) {
@@ -289,6 +292,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
             onMouseDown={(row: number, col: number) => this.handleMouseDown(row, col)}
             onMouseEnter={(row: number, col: number) => this.handleMouseEnter(row, col)}
             onMouseUp={() => this.handleMouseUp()}
+            showDist={this.state.showDist}
             visited={node.visited}
             isPath={node.isPath}
             weight={node.weight}
@@ -317,10 +321,19 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         return <div className="board" onMouseLeave={() => this.handleMouseUp()}>{grid}</div>
     }
 
+    private renderShowDistBtn() {
+        return (<div>
+            <button onClick={() => this.setState({...this.state, showDist: !this.state.showDist})}
+                className={this.state.showDist == true ? "show-dist" : ""}>
+                Display Distance </button>
+            </div>)
+    }
+
     render() {
         return (
             <div>
                 <div className="board-buttons">
+                    {this.renderShowDistBtn()}
                     <button onClick={() => this.findPath()} className="find-path">Find Path</button>
                     <button onClick={() => { softResetGrid(this.state.grid); this.setState({ "searchState": SearchState.None }) }} className="soft-reset">Soft Reset</button>
                     <button onClick={() => this.initGrid()} className="reset">Reset</button>
