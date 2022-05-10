@@ -15,6 +15,5 @@ Welcome to my pathfinder visualizer! I Wanted to create something that would hel
 ## TODO:
 * Implement more pathfinding algorithms (note only Djikstra's is implemented right now)
 * Add "information" button, with details on how to use the controls
-* Change the way path is displayed (currently path is almost invisible if it goes through forest)
-* Add graphics to start and end nodes (optionally for nodes as well)
+* Add graphics to start barrier nodes
 * Add ability to change pathfinding speed

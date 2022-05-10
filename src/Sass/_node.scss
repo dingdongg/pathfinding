@@ -10,7 +10,13 @@ $length: 50px;
     grid-auto-flow: dense;
 
     .barrier-segment {
-      background-color: $color;
+      position: relative;
+      &::after {
+        @extend .overlay;
+        background-color: $color;
+        opacity: 0.85;
+        overflow: hidden;
+      }
     }
   }
 }
@@ -27,11 +33,27 @@ $length: 50px;
   border-left: 0;
 
   &.start-node {
-    background-color: rgb(255, 241, 43);
+    position: relative;
+    &::after {
+      @extend .overlay;
+      background-image: url("../public/images/PlusheenCat.png");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transform: scaleX(-1);
+    }
   }
 
   &.end-node {
-    background-color: rgb(240, 75, 75);
+    position: relative;
+    &::after {
+      @extend .overlay;
+      background-image: url("../public/images/IceCream.png");
+      background-size: 80%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transform: scaleX(-1);
+    }
   }
 
   &.wall-node {
