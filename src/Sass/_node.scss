@@ -73,6 +73,15 @@ $length: 50px;
   &.path-node.visited:not(&.start-node, &.end-node) {
     background-color: rgb(40, 123, 182) !important;
   }
+
+  .distance-display{
+    color: rgb(215, 215, 215);
+    font-family:fantasy;
+    position: absolute;
+    user-select: none;
+    left: 45%;
+    top: 35%;
+  }
 }
 
 

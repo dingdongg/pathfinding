@@ -58,6 +58,15 @@ export class Node extends Component<INodeProps, INodeState> {
         return <div className="barrier-segments">{segments}</div>
     }
 
+    // If toggled on, render text overlay of distance display
+    renderDistanceDisplay() {
+        let displayValue = this.props.showDist ? this.props.distance : ""
+        displayValue = (displayValue < Infinity) ? displayValue : ""
+        return (
+        <span className="distance-display">{displayValue}</span>
+        )
+    }
+
     render() {
         let extraClasses = "";
         switch (this.props.nodeType) {
@@ -79,15 +88,13 @@ export class Node extends Component<INodeProps, INodeState> {
         extraClasses += this.props.isPath ? " path-node" : "";
         const row = this.props.row, col = this.props.col;
         
-        let displayValue = this.props.showDist ? this.props.distance : ""
-
         return (
             <div className={`node ${extraClasses}`}
                 onMouseDown={() => this.props.onMouseDown(row, col)}
                 onMouseEnter={() => this.props.onMouseEnter(row, col)}
                 onMouseUp={() => this.props.onMouseUp()}>
-                {displayValue}
-                {this.renderBarrierSegments()}</div>
+                {this.renderBarrierSegments()}
+                {this.renderDistanceDisplay()}</div>
         )
     }
 }

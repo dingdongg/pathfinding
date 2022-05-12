@@ -322,11 +322,9 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     }
 
     private renderShowDistBtn() {
-        return (<div>
-            <button onClick={() => this.setState({...this.state, showDist: !this.state.showDist})}
-                className={this.state.showDist == true ? "show-dist" : ""}>
-                Display Distance </button>
-            </div>)
+        return (<button onClick={() => this.setState({...this.state, showDist: !this.state.showDist})}
+                className={this.state.showDist == true ? "show-dist" : "show-dist-off"}>
+                Display Distance </button>)
     }
 
     render() {

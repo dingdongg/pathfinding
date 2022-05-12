@@ -34,5 +34,13 @@
         &.reset {
             @include button(rgb(232, 79, 79), rgb(223, 35, 35), rgb(143, 23, 21), rgb(169, 87, 87), rgb(67, 24, 24));
         }
+
+        &.show-dist {
+            @include button(#2b91f1, #2b91f1, #2b91f1, #66788b, #66788b);
+        }
+
+        &.show-dist-off {
+            @include button(#646464, #646464, #646464, gray, gray);
+        }
     }
 }
