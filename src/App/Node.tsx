@@ -47,6 +47,18 @@ export class Node extends Component<INodeProps, INodeState> {
         }
     }
 
+    static setType(node: INodeProps, type: NodeType) {
+        node.nodeType = type;
+        switch(type) {
+            case NodeType.ForestNode:
+                node.weight = 2;
+                break;
+            case NodeType.EmptyNode:
+                node.weight = 1;
+                break;
+        }
+    }
+
     renderBarrierSegments() {
         const segments = new Array(9);
         for (let i = 0; i < segments.length; i++) {

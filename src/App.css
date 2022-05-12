@@ -277,7 +277,6 @@ code {
 .node.wall-node .barrier-segments .barrier-segment::after {
   background-color: #109dee;
   opacity: 0.85;
-  overflow: hidden;
 }
 
 .node.forest-node .barrier-segments {
@@ -297,7 +296,6 @@ code {
 .node.forest-node .barrier-segments .barrier-segment::after {
   background-color: #025a02;
   opacity: 0.85;
-  overflow: hidden;
 }
 
 .node.visited:not(.node.end-node) {
