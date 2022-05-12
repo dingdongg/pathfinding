@@ -16,7 +16,7 @@ export interface INodeProps {
     col: number,
     nodeType: NodeType,
     barrierSegments: boolean[],
-    showDist: boolean,
+    showDistance: boolean,
     // Pathfinding props
     distance: number,
     weight: number,
@@ -39,7 +39,7 @@ export class Node extends Component<INodeProps, INodeState> {
             col: col,
             nodeType: NodeType.EmptyNode,
             barrierSegments: new Array(9).fill(false),
-            showDist: false,
+            showDistance: false,
             // Pathfinding props
             distance: Infinity,
             weight: 1,
@@ -72,7 +72,7 @@ export class Node extends Component<INodeProps, INodeState> {
 
     // If toggled on, render text overlay of distance display
     renderDistanceDisplay() {
-        let displayValue = this.props.showDist ? this.props.distance : ""
+        let displayValue = this.props.showDistance ? this.props.distance : ""
         displayValue = (displayValue < Infinity) ? displayValue : ""
         return (
         <span className="distance-display">{displayValue}</span>

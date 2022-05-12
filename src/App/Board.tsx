@@ -291,7 +291,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
             onMouseDown={(row: number, col: number) => this.handleMouseDown(row, col)}
             onMouseEnter={(row: number, col: number) => this.handleMouseEnter(row, col)}
             onMouseUp={() => this.handleMouseUp()}
-            showDist={this.state.showDist}
+            showDistance={this.state.showDist}
             visited={node.visited}
             isPath={node.isPath}
             weight={node.weight}
@@ -320,6 +320,15 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         return <div className="board" onMouseLeave={() => this.handleMouseUp()}>{grid}</div>
     }
 
+    private renderFindPathBtn() {
+        if (this.state.searchState == SearchState.None) {
+            return <button onClick={() => this.findPath()} className="find-path">Find Path</button>;
+        } else {
+            return <button className="find-path">Find Path</button>;
+        }
+       
+    }
+
     private renderShowDistBtn() {
         return (<button onClick={() => this.setState({...this.state, showDist: !this.state.showDist})}
                 className={this.state.showDist == true ? "show-dist" : "show-dist-off"}>
@@ -330,8 +339,8 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         return (
             <div>
                 <div className="board-buttons">
+                    {this.renderFindPathBtn()}
                     {this.renderShowDistBtn()}
-                    <button onClick={() => this.findPath()} className="find-path">Find Path</button>
                     <button onClick={() => { softResetGrid(this.state.grid); this.setState({ "searchState": SearchState.None }) }} className="soft-reset">Soft Reset</button>
                     <button onClick={() => this.initGrid()} className="reset">Reset</button>
                 </div>

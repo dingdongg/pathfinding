@@ -75,7 +75,9 @@ $length: 50px;
 
   .distance-display{
     color: rgb(215, 215, 215);
-    font-family:fantasy;
+    font-family: $oleo;
+    font-size: 1rem;
+    color:rgb(180, 234, 176);
     position: absolute;
     user-select: none;
     left: 45%;
