@@ -155,14 +155,13 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     // Assumes the provided node is not a start or end node
     modifyGridBarrier(grid: any[], row: number, col: number, barrierType: BarrierNode) {
         const node = this.getNode(grid, row, col);
-        switch (node.nodeType) {
-            case barrierType:
-                node.nodeType = EmptyNode;
-                break;
-            default:
-                setNodeBarrier(node, barrierType);
-                break;
+        // Setting node type
+        if (node.nodeType == barrierType) {
+            Node.setType(node, NodeType.EmptyNode);
+        } else {
+            Node.setType(node, barrierType);
         }
+        
 
         // Modifying surrounding wall classes
         for (let x = row - 1; x <= row + 1; x++) {
@@ -357,14 +356,3 @@ function softResetGrid(grid: any[]) {
         node.isPath = false;
     }
 }
-
-// Sets the provided node to the provided barrier type
-function setNodeBarrier(node: any, barrierType: BarrierNode) {
-    node.nodeType = barrierType;
-    switch (barrierType) {
-        case ForestNode:
-            node.weight = 2;
-            break;
-    }
-}
-

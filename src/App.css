@@ -243,7 +243,6 @@ code {
 .node.wall-node .barrier-segments .barrier-segment::after {
   background-color: rgb(16, 157, 238);
   opacity: 0.85;
-  overflow: hidden;
 }
 .node.forest-node .barrier-segments {
   display: grid;
@@ -260,7 +259,6 @@ code {
 .node.forest-node .barrier-segments .barrier-segment::after {
   background-color: rgb(2, 90, 2);
   opacity: 0.85;
-  overflow: hidden;
 }
 .node.visited:not(.node.end-node) {
   animation-name: visitAnimation;
