@@ -34,6 +34,8 @@ export class Djikstra implements Pathfinder {
 
     // Recursive search to find shortest path.
     private search() {
+        if (this.pathFound) return;
+
         // updating "Next"
         let next = undefined;
         while ((next === undefined || next.visited) && this.heap.length() > 0) {
@@ -42,10 +44,6 @@ export class Djikstra implements Pathfinder {
         // Searching "next"
         next.visited = true;
         this.addToSearchOrder(next);
-        if (next.nodeType === NodeType.EndNode) {
-            this.pathFound = true;
-            return;
-        }
         this.addNeighbors(next);
         // Case where no valid path is found
         if (this.heap.length() === 0) {
@@ -92,6 +90,7 @@ export class Djikstra implements Pathfinder {
                     nextNode.distance = node.distance + nextNode.weight;
                     nextNode.prev = node;
                     this.heap.insert(nextNode);
+                    if (nextNode.nodeType === NodeType.EndNode) this.pathFound = true;
                 }
             }
         }
