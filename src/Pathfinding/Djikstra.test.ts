@@ -48,7 +48,8 @@ test('No barriers pathfind', () => {
     const pathfinder: Pathfinder = new Djikstra(grid.height, grid.width);
     const pathInfo: PathInfo = pathfinder.findPath(grid.nodes);
     expect(pathInfo.pathFound).toEqual(true);
-    expect(pathInfo.searchOrder).toEqual([0,6,10,1,11,7,2,12,8,3,13,9])
+    expect(pathInfo.searchOrder.map(node => node.index)).toEqual([0,6,10,1,11,7,2,12,8]);
+    expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([1,1,1,2,2,2,3,3,3]);
     expect(pathInfo.shortestPath).toEqual([5,6,7,8])
 });
 
@@ -60,7 +61,8 @@ test('No valid path, no barriers', () => {
     const pathfinder: Pathfinder = new Djikstra(grid.height, grid.width);
     const pathInfo: PathInfo = pathfinder.findPath(grid.nodes);
     expect(pathInfo.pathFound).toEqual(false);
-    expect(pathInfo.searchOrder).toEqual([0,6,10,1,11])
+    expect(pathInfo.searchOrder.map(node => node.index)).toEqual([0,6,10,1,11])
+    expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([1,1,1,2,2])
     expect(pathInfo.shortestPath).toEqual([])
 });
 
