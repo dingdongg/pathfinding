@@ -1,10 +1,11 @@
 // Interfaces for pathfinder algorithms
 
 import {Djikstra} from "./Djikstra";
+import {BFS} from "./Bfs";
 
 export interface PathInfo {
     searchOrder: SearchedNode[], // Order in which nodes were searched
-    shortestPath: number[], // Order of nodes in shortest path
+    shortestPath: number[], // Order of INDICES of nodes in shortest path
     pathFound: boolean, // False if no path was found
 }
 
@@ -19,6 +20,8 @@ export abstract class Pathfinder {
         switch(algorithm) {
             case Algorithm.Djikstra:
                 return new Djikstra(BOARD_HEIGHT, BOARD_WIDTH);
+            case Algorithm.BFS:
+                return new BFS(BOARD_HEIGHT, BOARD_WIDTH);
             default:
                 return new Djikstra(BOARD_HEIGHT, BOARD_WIDTH);
         }
@@ -33,6 +36,6 @@ export abstract class Pathfinder {
 
 // Enumeration of all the available algorithms
 export const enum Algorithm {
-    Djikstra = "Djikstra's", ASharp = "A#"
+    Djikstra = "Djikstra's", ASharp = "A#", BFS = "BFS",
 }
 
