@@ -118,9 +118,9 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
             <button onClick={() => this.changeAlgorithm(Algorithm.Djikstra)}
                 className={this.state.algorithm == Algorithm.Djikstra ? "selected djikstra's" : ""}>
                 Djikstra's</button>
-            <button onClick={() => this.changeAlgorithm(Algorithm.ASharp)}
-                className={this.state.algorithm == Algorithm.ASharp ? "selected a-sharp" : ""}>
-                A#</button>
+            <button onClick={() => this.changeAlgorithm(Algorithm.AStar)}
+                className={this.state.algorithm == Algorithm.AStar ? "selected a-sharp" : ""}>
+                A*</button>
         </div>;
     }
     changeAlgorithm(algorithm: Algorithm): void {

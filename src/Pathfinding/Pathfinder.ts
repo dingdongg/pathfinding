@@ -1,6 +1,7 @@
 // Interfaces for pathfinder algorithms
 
-import {Djikstra} from "./Djikstra";
+import {Djikstra} from "./Djikstra/Djikstra";
+import {AStar} from "./AStar/AStar";
 
 export interface PathInfo {
     searchOrder: SearchedNode[], // Order in which nodes were searched
@@ -15,10 +16,13 @@ export interface SearchedNode {
 }
 
 export abstract class Pathfinder {
+
     public static createPathfinder(algorithm: Algorithm, BOARD_HEIGHT: number, BOARD_WIDTH: number): Pathfinder {
         switch(algorithm) {
             case Algorithm.Djikstra:
                 return new Djikstra(BOARD_HEIGHT, BOARD_WIDTH);
+            case Algorithm.AStar:
+                return new AStar(BOARD_HEIGHT, BOARD_WIDTH);
             default:
                 return new Djikstra(BOARD_HEIGHT, BOARD_WIDTH);
         }
@@ -33,6 +37,6 @@ export abstract class Pathfinder {
 
 // Enumeration of all the available algorithms
 export const enum Algorithm {
-    Djikstra = "Djikstra's", ASharp = "A#"
+    Djikstra = "Djikstra's", AStar = "A*"
 }
 
