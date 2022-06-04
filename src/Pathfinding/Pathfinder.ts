@@ -5,7 +5,7 @@ import {AStar} from "./AStar/AStar";
 
 export interface PathInfo {
     searchOrder: SearchedNode[], // Order in which nodes were searched
-    shortestPath: number[], // Order of nodes in shortest path
+    shortestPath: number[], // Order of INDICES of nodes in shortest path
     pathFound: boolean, // False if no path was found
 }
 
@@ -21,6 +21,8 @@ export abstract class Pathfinder {
         switch(algorithm) {
             case Algorithm.Djikstra:
                 return new Djikstra(BOARD_HEIGHT, BOARD_WIDTH);
+            case Algorithm.BFS:
+                return new BFS(BOARD_HEIGHT, BOARD_WIDTH);
             case Algorithm.AStar:
                 return new AStar(BOARD_HEIGHT, BOARD_WIDTH);
             default:
@@ -37,6 +39,6 @@ export abstract class Pathfinder {
 
 // Enumeration of all the available algorithms
 export const enum Algorithm {
-    Djikstra = "Djikstra's", AStar = "A*"
+    Djikstra = "Djikstra's", AStar = "A*", BFS = "BFS",
 }
 
