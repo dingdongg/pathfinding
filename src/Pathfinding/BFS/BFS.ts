@@ -106,7 +106,32 @@ export class BFS implements Pathfinder {
      *  returns a list of the neighboring nodes of @node
      */
     private getNeighbors(node: INode) {
-        return [node]; // stub
+        let currNodeIndex = this.getIndex(node);
+        /**
+         * TOP NODE: currNodeIndex - this.grid.width >= 0
+         * RIGHT NODE: currNodeIndex + 1 < this.grid.width * node.row + 1
+         * BOTTOM NODE: currNodeIndex + this.grid.width < this.grid.nodes.length
+         * LEFT NODE: currNodeIndex - 1 >= this.grid.width * node.row
+         * 
+         */
+        const topCond = currNodeIndex - this.grid.width;
+        const rightCond = currNodeIndex + 1;
+        const bottomCond = currNodeIndex + this.grid.width;
+        const leftCond = currNodeIndex - 1;
+
+        let topIndex = (topCond >= 0) ? topCond : undefined;
+        let rightIndex = (rightCond < this.grid.width * node.row + 1) ? rightCond : undefined;
+        let bottomIndex = (bottomCond < this.grid.nodes.length) ? bottomCond : undefined;
+        let leftIndex = (leftCond >= this.grid.width * node.row) ? leftCond : undefined;
+        
+        const neighborsIndex = [topIndex, rightIndex, bottomIndex, leftIndex];
+        let retval = [];
+        for (const neighborIndex of neighborsIndex) {
+            if (neighborIndex !== undefined) {
+                retval.push(this.grid.nodes[neighborIndex]);
+            }
+        }
+        return retval;
     }
 
     /**
