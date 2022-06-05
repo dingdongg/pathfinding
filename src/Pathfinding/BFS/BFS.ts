@@ -1,4 +1,4 @@
-import {Pathfinder, PathInfo, SearchedNode} from "./Pathfinder";
+import {Pathfinder, PathInfo, SearchedNode} from "../Pathfinder";
 
 // Pathfinding class for breadth-first search (BFS)
 export class BFS implements Pathfinder {
