@@ -16,7 +16,7 @@ export class Queue {
     /**
      *  adds @val to the back of the queue
      */
-    public enqueue(val) {
+    public enqueue(val: any) {
         this.stackIn.push(val);
     }
 
