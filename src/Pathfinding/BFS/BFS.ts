@@ -68,23 +68,15 @@ export class BFS implements Pathfinder {
     private solve(): INode[] {
         // enqueue starting node
         this.queue.enqueue(this.startNode);
-
-        // initalize bool array[BOARD_HEIGHT * BOARD_WIDTH] to be false
-        let visited = [];
-        // initialize parent[BOARD_HEIGHT * BOARD_WIDTH] to be null
-        // used to reconstruct path from startNode to endNode 
         let prev = [];
 
         let n = this.grid.height * this.grid.width;
         for (let i = 0; i < n; i++) {
-            visited[i] = false;
+            // visited[i] = false;
             prev[i] = null;
         }
-        visited[this.getIndex(<INode> this.startNode)] = true;
-        this.searchOrder.push({
-            index: this.getIndex(<INode> this.startNode),
-            distance: 0
-        });
+        // visited[this.getIndex(<INode> this.startNode)] = true;
+        this.markSearched(<INode> this.startNode, (<INode> this.startNode).distance);
 
         while (!this.queue.isEmpty()) {
             let node = this.queue.dequeue();
@@ -92,14 +84,24 @@ export class BFS implements Pathfinder {
 
             for (const neighbor of neighbors) {
                 let idx = this.getIndex(neighbor);
-                if (!visited[idx]) {
+                if (!this.grid.nodes[idx].visited) {
                     this.queue.enqueue(neighbor);
-                    visited[idx] = true;
+                    neighbor.distance = (<INode> node).distance + 1;
+                    this.markSearched(neighbor, neighbor.distance);
                     prev[idx] = node;
+                    if (neighbor.nodeType === NodeType.EndNode) return prev;
                 }
             }
         }
         return prev;
+    }
+
+    private markSearched(node: INode, dist: number) {
+        node.visited = true;
+        this.searchOrder.push({
+            index: this.getIndex(<INode> node),
+            distance: dist
+        });
     }
 
     /**
@@ -120,7 +122,7 @@ export class BFS implements Pathfinder {
         const leftCond = currNodeIndex - 1;
 
         let topIndex = (topCond >= 0) ? topCond : undefined;
-        let rightIndex = (rightCond < this.grid.width * node.row + 1) ? rightCond : undefined;
+        let rightIndex = (rightCond < this.grid.width * (node.row + 1)) ? rightCond : undefined;
         let bottomIndex = (bottomCond < this.grid.nodes.length) ? bottomCond : undefined;
         let leftIndex = (leftCond >= this.grid.width * node.row) ? leftCond : undefined;
         
@@ -142,18 +144,7 @@ export class BFS implements Pathfinder {
     }
 
     private reconstructPath(start: INode, end: INode, prevPath: INode[]) {
-        
-        /**
-         *  path = empty path (array)
-         *  for (at = end; at != null; at = prevPath[at])
-         *      path.add(at)
-         *  
-         *  path.reverse()
-         * 
-         *  if path[0] == start:
-         *      return path
-         *  return []
-         */
+
         let path = [];
         for (let at = end; at != null; at = prevPath[this.getIndex(at)]) {
             path.push(this.getIndex(at));
