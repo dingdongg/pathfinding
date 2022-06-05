@@ -6,20 +6,19 @@ import {IGrid, INode, Pathfinder, PathInfo, SearchedNode} from "../Pathfinder";
 export class Djikstra implements Pathfinder {
     grid: IGrid;
     searchOrder: SearchedNode[] = [];
-    shortestPath: any;
-    pathFound: any;
-    heap: any;
-    startNode: any;
-    endNode: any;
+    shortestPath: number[] = [];
+    pathFound: boolean = false;
+    heap: Heap = new Heap((node: any) => { return node.distance });
+    startNode: INode | undefined = undefined;
+    endNode: INode | undefined = undefined;
 
     constructor(BOARD_HEIGHT: number, BOARD_WIDTH: number) {
         this.grid = {height: BOARD_HEIGHT, width: BOARD_WIDTH, nodes: []};
     }
     
     
-    public findPath(grid: any[]):PathInfo {
+    public findPath(grid: INode[]): PathInfo {
         this.init(grid);
-        this.addNeighbors(this.startNode);
         this.search();
         this.calcShortestPath();
         return {
@@ -31,8 +30,13 @@ export class Djikstra implements Pathfinder {
 
     // Recursive search to find shortest path.
     private search() {
-        if (this.pathFound) return;
-
+        if ((<INode>this.endNode).visited) {
+            this.pathFound = true;
+            return;
+        } else if (this.heap.length() === 0) {
+            this.pathFound = false;
+            return;
+        }
         // updating "Next"
         let next = undefined;
         while ((next === undefined || next.visited) && this.heap.length() > 0) {
@@ -42,28 +46,21 @@ export class Djikstra implements Pathfinder {
         next.visited = true;
         this.addToSearchOrder(next);
         this.addNeighbors(next);
-        // Case where no valid path is found
-        if (this.heap.length() === 0) {
-            this.pathFound = false;
-            return;
-        }
         this.search();
     }
 
     // Initializes class variables
     private init(grid: INode[]) {
         this.grid.nodes = grid.slice();
-        this.searchOrder = [];
-        this.shortestPath = [];
-        this.startNode = undefined;
-        this.endNode = undefined;
         this.heap = new Heap((node: any) => { return node.distance });
+        
         // Initialize start and end indices
         for (const i in grid) {
             if (grid[i].nodeType === NodeType.StartNode) {
                 this.startNode = grid[i];
                 grid[i].distance = 0;
                 grid[i].visited = true;
+                this.heap.insert(grid[i]);
             } else if (grid[i].nodeType === NodeType.EndNode) {
                 this.endNode = grid[i];
             }
@@ -87,7 +84,6 @@ export class Djikstra implements Pathfinder {
                     nextNode.distance = node.distance + nextNode.weight;
                     nextNode.prev = node;
                     this.heap.insert(nextNode);
-                    if (nextNode.nodeType === NodeType.EndNode) this.pathFound = true;
                 }
             }
         }
@@ -95,7 +91,7 @@ export class Djikstra implements Pathfinder {
     }
 
     // Adds the node to the search order
-    private addToSearchOrder(node: any) {
+    private addToSearchOrder(node: INode) {
         this.searchOrder.push(
             {
                 index: node.row * this.grid.width + node.col,
@@ -105,7 +101,8 @@ export class Djikstra implements Pathfinder {
 
     // Initializes "this.shortestPath"
     private calcShortestPath() {
-        let prev = this.endNode.prev;
+        if (!this.pathFound) return;
+        let prev:INode = <INode>this.endNode
         const shortestPath = [];
         while (prev !== null) {
             shortestPath.unshift(this.getIndex(prev));
@@ -115,7 +112,7 @@ export class Djikstra implements Pathfinder {
     }
 
     // Returns the (array) index for a node
-    private getIndex(node: any) {
+    private getIndex(node: INode) {
         return node.row*this.grid.width + node.col;
     }
 }
