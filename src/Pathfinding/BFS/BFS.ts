@@ -1,5 +1,5 @@
 import { NodeType } from "../../App/Node";
-import {Pathfinder, PathInfo, SearchedNode} from "../Pathfinder";
+import {IGrid, INode, Pathfinder, PathInfo, SearchedNode} from "../Pathfinder";
 import {Queue} from "../Queue";
 
 
@@ -11,26 +11,28 @@ import {Queue} from "../Queue";
 
 // Pathfinding class for breadth-first search (BFS)
 export class BFS implements Pathfinder {
-    BOARD_HEIGHT: number;
-    BOARD_WIDTH: number;
-    grid: any;
-    startNode: any;
-    endNode: any;
+    grid: IGrid;
+    startNode: INode | undefined;
+    endNode: INode | undefined;
     queue: Queue;
 
-    // findPath return values 
+    // PathInfo properties
     searchOrder: SearchedNode[];
     shortestPath: number[];
     pathFound: boolean;
 
-    constructor(width: number, height: number) {
-        this.BOARD_HEIGHT = height;
-        this.BOARD_WIDTH = width;
+    /**
+     *  creates an instance of the BFS algorithm. 
+     *  The width/height of the board is passed in (structure),
+     *  and an empty list of nodes (state).
+     */
+    constructor(BOARD_HEIGHT: number, BOARD_WIDTH: number) {
+        this.grid = {height: BOARD_HEIGHT, width: BOARD_WIDTH, nodes: []};
     }
 
-    public findPath(grid: any[]): PathInfo {
+    public findPath(nodes: INode[]): PathInfo {
 
-        this.init(grid);
+        this.init(nodes);
         let prev = this.solve();
         this.shortestPath = this.reconstructPath(this.startNode, this.endNode, prev);
 
@@ -44,14 +46,16 @@ export class BFS implements Pathfinder {
     /**
      *  Initializes all instance variables
      */
-    private init(grid) {
-        this.grid = grid;
+    private init(nodes) {
+        this.grid.nodes = nodes.slice();
         this.queue = new Queue();
 
-        for (let i = 0; i < this.grid.length; i++) {
-            let currNode = this.grid[i];
+        for (let i = 0; i < this.grid.nodes.length; i++) {
+            let currNode = this.grid.nodes[i];
             if (currNode.nodeType === NodeType.StartNode) {
                 this.startNode = currNode;
+                this.startNode.distance = 0;
+                this.startNode.visited = true;
             } else if (currNode.nodeType === NodeType.EndNode) {
                 this.endNode = currNode;
             }
@@ -63,31 +67,50 @@ export class BFS implements Pathfinder {
     }
 
     private solve() {
-
-        // construct Queue object to keep track of visited nodes 
         // enqueue starting node
+        this.queue.enqueue(this.startNode);
 
         // initalize bool array[BOARD_HEIGHT * BOARD_WIDTH] to be false
-        // array[startNode] = true
-        // use this.searchOrder?
-
+        let visited = [];
         // initialize parent[BOARD_HEIGHT * BOARD_WIDTH] to be null
         // used to reconstruct path from startNode to endNode 
+        let prev = [];
 
-        /**
-         *  While Queue isn't empty:
-         *      node = dequeue()
-         *      neighbors = getNeighbors(node)
-         * 
-         *      for (neighbor : neighbors):
-         *          if !visited[neighbor]:
-         *              enqueue(neightbor)
-         *              visited[neighbor] = true
-         *              parent[neighbor] = node
-         * 
-         *  return prev
-         */
+        let n = this.grid.height * this.grid.width;
+        for (let i = 0; i < n; i++) {
+            visited[i] = false;
+            prev[i] = null;
+        }
+        visited[this.getIndex(this.startNode)] = true;
 
+        while (!this.queue.isEmpty()) {
+            let node = this.queue.dequeue();
+            let neighbors = this.getNeighbors(node);
+
+            for (const neighbor of neighbors) {
+                let idx = this.getIndex(neighbor);
+                if (!visited[idx]) {
+                    this.queue.enqueue(neighbor);
+                    visited[idx] = true;
+                    prev[idx] = node;
+                }
+            }
+            return prev;
+        }
+    }
+
+    /**
+     *  returns a list of the neighboring nodes of @node
+     */
+    private getNeighbors(node: INode) {
+        return [node]; // stub
+    }
+
+    /**
+     *  calculate and return the 0-based array index of the node
+     */
+    private getIndex(node: INode) {
+        return node.row * this.grid.width + node.col;
     }
 
     private reconstructPath(start, end, prevPath) {
