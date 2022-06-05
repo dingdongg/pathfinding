@@ -1,8 +1,16 @@
 import { Heap } from "../Heap";
 import { NodeType } from "../../App/Node";
-import { IGrid, INode, Pathfinder, PathInfo, SearchedNode } from "../Pathfinder";
+import { IGrid as BaseIGrid, INode as BaseINode, Pathfinder, PathInfo, SearchedNode } from "../Pathfinder";
 
-// Pathfinding class for Djikstra's algorithm
+// Pathfinding class for ASharp
+
+export interface IGrid extends BaseIGrid {
+    nodes: INode[]
+}
+export interface INode extends BaseINode {
+    euclidDist: number,
+    grid: IGrid
+}
 export class AStar implements Pathfinder {
     grid: IGrid;
     searchOrder: SearchedNode[] = [];
@@ -39,7 +47,7 @@ export class AStar implements Pathfinder {
             }
         }
         for (const node of grid.nodes) {
-            // node.euclidDist = this.calcEuclidDist(node, endNode);
+            node.euclidDist = this.calcEuclidDist(node, endNode);
         }
     };
 
