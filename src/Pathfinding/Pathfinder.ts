@@ -4,6 +4,11 @@ import {Djikstra} from "./Djikstra/Djikstra";
 import {AStar} from "./AStar/AStar";
 import {BFS} from "./BFS/BFS";
 
+// Enumeration of all the available algorithms
+export const enum Algorithm {
+    Djikstra = "Djikstra's", AStar = "A*", BFS = "BFS",
+}
+
 export interface PathInfo {
     searchOrder: SearchedNode[], // Order in which nodes were searched
     shortestPath: number[], // Order of INDICES of nodes in shortest path
@@ -36,10 +41,5 @@ export abstract class Pathfinder {
     // Assumes all nodes start with infinite distance and are unvisited
     // Note that this WILL MODIFY visited states of board
     public abstract findPath(grid: any[]): PathInfo;
-}
-
-// Enumeration of all the available algorithms
-export const enum Algorithm {
-    Djikstra = "Djikstra's", AStar = "A*", BFS = "BFS",
 }
 
