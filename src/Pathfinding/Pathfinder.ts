@@ -2,6 +2,8 @@
 
 import {Djikstra} from "./Djikstra/Djikstra";
 import {AStar} from "./AStar/AStar";
+import {BFS} from "./Bfs/Bfs";
+
 
 export interface PathInfo {
     searchOrder: SearchedNode[], // Order in which nodes were searched
