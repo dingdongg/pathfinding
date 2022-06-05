@@ -13,7 +13,7 @@ export const enum Algorithm {
 export interface IGrid {
     height: number,
     width: number,
-    nodes: any[]
+    nodes: INode[]
 }
 
 export interface INode {
@@ -57,6 +57,6 @@ export abstract class Pathfinder {
     // Find shortest path from start node to end node
     // Assumes all nodes start with infinite distance and are unvisited
     // Note that this WILL MODIFY visited states of board
-    public abstract findPath(grid: any[]): PathInfo;
+    public abstract findPath(grid: INode[]): PathInfo;
 }
 

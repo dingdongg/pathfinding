@@ -34,18 +34,18 @@ test("Basic wall test (map1)", () => {
 });
 
 // Initializes Euclidean distance of each node in grid
-function initEuclidDist(grid: IGrid): void {
-    let endNode: INode = grid.nodes[0];
-    for (const node of grid.nodes) {
-        if (node.nodeType == NodeType.EndNode) {
-            endNode = node;
-            break;
-        }
-    }
-    for (const node of grid.nodes) {
-        node.euclidDist = calcEuclidDist(node, endNode);
-    }
-};
+// function initEuclidDist(grid: IGrid): void {
+//     let endNode: INode = grid.nodes[0];
+//     for (const node of grid.nodes) {
+//         if (node.nodeType == NodeType.EndNode) {
+//             endNode = node;
+//             break;
+//         }
+//     }
+//     for (const node of grid.nodes) {
+//         node.euclidDist = calcEuclidDist(node, endNode);
+//     }
+// };
 
 function calcEuclidDist(node1:INode, node2:INode): number {
     return ((node1.col-node2.col)**2 + (node1.row - node2.row)**2)**(1/2);

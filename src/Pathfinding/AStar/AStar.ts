@@ -42,7 +42,7 @@ export class AStar implements Pathfinder {
             }
         }
         for (const node of grid.nodes) {
-            node.euclidDist = this.calcEuclidDist(node, endNode);
+            // node.euclidDist = this.calcEuclidDist(node, endNode);
         }
     };
 
