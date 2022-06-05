@@ -3,10 +3,27 @@
 import {Djikstra} from "./Djikstra/Djikstra";
 import {AStar} from "./AStar/AStar";
 import {BFS} from "./BFS/BFS";
+import { NodeType } from "../App/Node";
 
 // Enumeration of all the available algorithms
 export const enum Algorithm {
     Djikstra = "Djikstra's", AStar = "A*", BFS = "BFS",
+}
+
+export interface IGrid {
+    height: number,
+    width: number,
+    nodes: any[]
+}
+
+export interface INode {
+    weight: number,
+    row: number,
+    col: number,
+    distance: number,
+    nodeType: NodeType,
+    visited: boolean,
+    prev: INode
 }
 
 export interface PathInfo {

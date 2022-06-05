@@ -1,20 +1,5 @@
 import { NodeType} from '../App/Node';
-
-export interface IGrid {
-    height: number,
-    width: number,
-    nodes: any[]
-}
-
-export interface INode {
-    weight: number,
-    row: number,
-    col: number,
-    distance: number,
-    nodeType: NodeType,
-    visited: boolean,
-    prev: INode
-}
+import { IGrid, INode } from './Pathfinder';
 
 export class Util {
     // Initializes an empty grid of nodes
@@ -44,6 +29,13 @@ export class Util {
             for (let x = startX; x <= endX; x++) {
                 grid.nodes[y * grid.width + x].nodeType = NodeType.WallNode;
             }
+        }
+    }
+
+    // Given a grid, sets all nodes with indices "indices" to be a wall
+    public static setWallList(grid: IGrid, indices: number[]): void {
+        for (const index of indices) {
+            grid.nodes[index].nodeType = NodeType.WallNode;
         }
     }
 

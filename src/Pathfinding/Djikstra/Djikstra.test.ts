@@ -1,7 +1,7 @@
 import { Djikstra } from './Djikstra';
-import { Pathfinder, PathInfo } from '../Pathfinder';
+import { IGrid, Pathfinder, PathInfo } from '../Pathfinder';
 import { NodeType} from '../../App/Node';
-import {IGrid, INode, Util} from '../util.test';
+import {Util} from '../util.test';
 
 test('No barriers pathfind', () => {
     const grid: IGrid = Util.createGrid(3,5);

@@ -1,6 +1,6 @@
 import { Heap } from "../Heap";
 import { NodeType } from "../../App/Node";
-import {Pathfinder, PathInfo, SearchedNode} from "../Pathfinder";
+import {IGrid, Pathfinder, PathInfo, SearchedNode} from "../Pathfinder";
 
 // Pathfinding class for Djikstra's algorithm
 export class Djikstra implements Pathfinder {
