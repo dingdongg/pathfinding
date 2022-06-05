@@ -47,7 +47,7 @@ export class Util {
         }
     }
 
-    public static createNode(weight: number, row: number, col: number): INode {
+    static createNode(weight: number, row: number, col: number): INode {
         const node: any = { weight, row, col, nodeType: NodeType.EmptyNode, visited: false, prev: null, distance: Infinity };
         return node;
     }
