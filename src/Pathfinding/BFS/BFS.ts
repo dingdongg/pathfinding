@@ -1,4 +1,6 @@
+import { NodeType } from "../../App/Node";
 import {Pathfinder, PathInfo, SearchedNode} from "../Pathfinder";
+import {Queue} from "../Queue";
 
 
 /**
@@ -14,11 +16,12 @@ export class BFS implements Pathfinder {
     grid: any;
     startNode: any;
     endNode: any;
+    queue: Queue;
 
     // findPath return values 
-    searchOrder: SearchedNode[] = [];
-    shortestPath: any;
-    pathFound: any;
+    searchOrder: SearchedNode[];
+    shortestPath: number[];
+    pathFound: boolean;
 
     constructor(width: number, height: number) {
         this.BOARD_HEIGHT = height;
@@ -27,6 +30,7 @@ export class BFS implements Pathfinder {
 
     public findPath(grid: any[]): PathInfo {
 
+        this.init(grid);
         let prev = this.solve();
         this.shortestPath = this.reconstructPath(this.startNode, this.endNode, prev);
 
@@ -37,6 +41,27 @@ export class BFS implements Pathfinder {
         };
     }
 
+    /**
+     *  Initializes all instance variables
+     */
+    private init(grid) {
+        this.grid = grid;
+        this.queue = new Queue();
+
+        for (let i = 0; i < this.grid.length; i++) {
+            let currNode = this.grid[i];
+            if (currNode.nodeType === NodeType.StartNode) {
+                this.startNode = currNode;
+            } else if (currNode.nodeType === NodeType.EndNode) {
+                this.endNode = currNode;
+            }
+        }
+
+        this.searchOrder = [];
+        this.shortestPath = [];
+        this.pathFound = false;
+    }
+
     private solve() {
 
         // construct Queue object to keep track of visited nodes 
@@ -44,6 +69,7 @@ export class BFS implements Pathfinder {
 
         // initalize bool array[BOARD_HEIGHT * BOARD_WIDTH] to be false
         // array[startNode] = true
+        // use this.searchOrder?
 
         // initialize parent[BOARD_HEIGHT * BOARD_WIDTH] to be null
         // used to reconstruct path from startNode to endNode 
@@ -77,7 +103,7 @@ export class BFS implements Pathfinder {
          *      return path
          *  return []
          */
-
+        return [1]; // stub
     }
 
 }
