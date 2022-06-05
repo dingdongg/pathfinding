@@ -4,19 +4,16 @@ import { IGrid, INode, Pathfinder, PathInfo, SearchedNode } from "../Pathfinder"
 
 // Pathfinding class for Djikstra's algorithm
 export class AStar implements Pathfinder {
-    BOARD_HEIGHT: number;
-    BOARD_WIDTH: number;
+    grid: IGrid;
     searchOrder: SearchedNode[] = [];
-    shortestPath: any;
-    pathFound: any;
-    heap: any;
-    grid: any;
-    startNode: any;
-    endNode: any;
+    shortestPath: number[] = [];
+    pathFound: boolean = false;
+    heap: Heap = new Heap((node: any) => { return node.distance });
+    startNode: INode | undefined = undefined;
+    endNode: INode | undefined = undefined;
 
     constructor(BOARD_HEIGHT: number, BOARD_WIDTH: number) {
-        this.BOARD_HEIGHT = BOARD_HEIGHT;
-        this.BOARD_WIDTH = BOARD_WIDTH;
+        this.grid = {height: BOARD_HEIGHT, width: BOARD_WIDTH, nodes: []};
     }
 
 
