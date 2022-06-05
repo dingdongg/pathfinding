@@ -3,10 +3,27 @@
 import {Djikstra} from "./Djikstra/Djikstra";
 import {AStar} from "./AStar/AStar";
 import {BFS} from "./BFS/BFS";
+import { NodeType } from "../App/Node";
 
 // Enumeration of all the available algorithms
 export const enum Algorithm {
     Djikstra = "Djikstra's", AStar = "A*", BFS = "BFS",
+}
+
+export interface IGrid {
+    height: number,
+    width: number,
+    nodes: INode[]
+}
+
+export interface INode {
+    weight: number,
+    row: number,
+    col: number,
+    distance: number,
+    nodeType: NodeType,
+    visited: boolean,
+    prev: INode
 }
 
 export interface PathInfo {
@@ -40,6 +57,6 @@ export abstract class Pathfinder {
     // Find shortest path from start node to end node
     // Assumes all nodes start with infinite distance and are unvisited
     // Note that this WILL MODIFY visited states of board
-    public abstract findPath(grid: any[]): PathInfo;
+    public abstract findPath(grid: INode[]): PathInfo;
 }
 
