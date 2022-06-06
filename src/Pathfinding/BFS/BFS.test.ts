@@ -38,5 +38,27 @@ test('Go through forests unaffected', () => {
 
 // TODO
 test("Disjoint graph", () => {
+    let testGrid: IGrid = Util.createGrid(4, 7);
+    testGrid.nodes[16].nodeType = NodeType.StartNode;
+    for (let i = 7; i < 14; i++) {
+        testGrid.nodes[i].nodeType = NodeType.WallNode;
+    }
+    testGrid.nodes[6].nodeType = NodeType.EndNode;
 
+    let algorithm: Pathfinder = new BFS(testGrid.height, testGrid.width);
+    const result: PathInfo = algorithm.findPath(testGrid.nodes);
+    expect(result.pathFound).toEqual(false);
+    expect(result.searchOrder.map(node => node.index)).toEqual([16, 
+                                                                17, 23, 15, 
+                                                                18, 24, 22, 14, 
+                                                                19, 25, 21, 
+                                                                20, 26, 
+                                                                27]);
+    expect(result.searchOrder.map(node => node.distance)).toEqual([0, 
+                                                                   1, 1, 1, 
+                                                                   2, 2, 2, 2, 
+                                                                   3, 3, 3, 
+                                                                   4, 4, 
+                                                                   5]);
+    expect(result.shortestPath).toEqual([]);
 });
