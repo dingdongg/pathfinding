@@ -16,30 +16,21 @@ export class BFS implements Pathfinder {
     endNode: INode | undefined;
     queue: Queue;
 
-    // PathInfo properties
-    searchOrder: SearchedNode[];
-    shortestPath: number[];
-    pathFound: boolean;
-
-    /**
-     *  creates an instance of the BFS algorithm. 
-     *  The width/height of the board is passed in (structure),
-     *  and an empty list of nodes (state).
-     */
-    constructor(BOARD_HEIGHT: number, BOARD_WIDTH: number) {
-        this.grid = {height: BOARD_HEIGHT, width: BOARD_WIDTH, nodes: []};
+    constructor(width: number, height: number, nodes: INode[]) {
+        this.BOARD_HEIGHT = height;
+        this.BOARD_WIDTH = width;
+        this.grid.nodes = nodes;
         this.queue = new Queue();
         this.searchOrder = [];
         this.shortestPath = [];
         this.pathFound = false;
     }
 
-    public findPath(nodes: INode[]): PathInfo {
+    public findPath(): PathInfo {
 
         this.init(nodes);
         let prev = this.solve();
         this.reconstructPath(<INode> this.startNode, <INode> this.endNode, prev);
-
         return {
             searchOrder: this.searchOrder,
             shortestPath: this.shortestPath,
