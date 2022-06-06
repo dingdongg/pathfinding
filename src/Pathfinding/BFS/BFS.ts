@@ -84,7 +84,7 @@ export class BFS implements Pathfinder {
 
             for (const neighbor of neighbors) {
                 let idx = this.getIndex(neighbor);
-                if (!this.grid.nodes[idx].visited) {
+                if (!this.grid.nodes[idx].visited && this.grid.nodes[idx].nodeType !== NodeType.WallNode) {
                     this.queue.enqueue(neighbor);
                     neighbor.distance = (<INode> node).distance + 1;
                     this.markSearched(neighbor, neighbor.distance);
