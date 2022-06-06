@@ -40,16 +40,16 @@ export interface SearchedNode {
 
 export abstract class Pathfinder {
 
-    public static createPathfinder(algorithm: Algorithm, BOARD_HEIGHT: number, BOARD_WIDTH: number): Pathfinder {
+    public static createPathfinder(algorithm: Algorithm, BOARD_HEIGHT: number, BOARD_WIDTH: number, nodes: INode[]): Pathfinder {
         switch(algorithm) {
             case Algorithm.Djikstra:
-                return new Djikstra(BOARD_HEIGHT, BOARD_WIDTH);
+                return new Djikstra(BOARD_HEIGHT, BOARD_WIDTH, nodes);
             case Algorithm.BFS:
-                return new BFS(BOARD_HEIGHT, BOARD_WIDTH);
+                return new BFS(BOARD_HEIGHT, BOARD_WIDTH, nodes);
             case Algorithm.AStar:
-                return new AStar(BOARD_HEIGHT, BOARD_WIDTH);
+                return new AStar(BOARD_HEIGHT, BOARD_WIDTH, nodes);
             default:
-                return new Djikstra(BOARD_HEIGHT, BOARD_WIDTH);
+                return new Djikstra(BOARD_HEIGHT, BOARD_WIDTH, nodes);
         }
     }
 
@@ -57,6 +57,6 @@ export abstract class Pathfinder {
     // Find shortest path from start node to end node
     // Assumes all nodes start with infinite distance and are unvisited
     // Note that this WILL MODIFY visited states of board
-    public abstract findPath(grid: INode[]): PathInfo;
+    public abstract findPath(): PathInfo;
 }
 

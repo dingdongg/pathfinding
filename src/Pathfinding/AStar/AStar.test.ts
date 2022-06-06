@@ -8,8 +8,8 @@ test("Open Board test", () => {
     let grid: IGrid  = Util.createGrid(4, 5);
     grid.nodes[6].nodeType = NodeType.StartNode;
     grid.nodes[19].nodeType = NodeType.EndNode;
-    const pathfinder: Pathfinder = new AStar(grid.height, grid.width);
-    const pathInfo: PathInfo = pathfinder.findPath(grid.nodes);
+    const pathfinder: Pathfinder = new AStar(grid.height, grid.width, grid.nodes);
+    const pathInfo: PathInfo = pathfinder.findPath();
     expect(pathInfo.pathFound).toEqual(true);
     expect(pathInfo.searchOrder.map(node => node.index)).toEqual([7,8,13,14]);
     expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([1,2,3,4]);
@@ -22,8 +22,8 @@ test("Basic wall test (map1)", () => {
     grid.nodes[11].nodeType = NodeType.StartNode;
     grid.nodes[24].nodeType = NodeType.EndNode;
     Util.setWallList(grid, [6,7,12,16,17,23]);
-    const pathfinder: Pathfinder = new AStar(grid.height, grid.width);
-    const pathInfo: PathInfo = pathfinder.findPath(grid.nodes);
+    const pathfinder: Pathfinder = new AStar(grid.height, grid.width, grid.nodes);
+    const pathInfo: PathInfo = pathfinder.findPath();
     expect(pathInfo.pathFound).toEqual(true);
     expect(pathInfo.searchOrder.map(node => node.index)).toEqual([11,10,15,20,21,22,5,0,1,2,3,8,13,18,19,24]);
     expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([0,1,2,3,4,5,6,7,8,9,10,11]);
@@ -37,8 +37,8 @@ test("Basic wall and forest test (map2)", () => {
     grid.nodes[24].nodeType = NodeType.EndNode;
     Util.setWallList(grid, [6,7,12,16,17,23]);
     Util.setWeight(grid, 2, 0,3,4,4);
-    const pathfinder: Pathfinder = new AStar(grid.height, grid.width);
-    const pathInfo: PathInfo = pathfinder.findPath(grid.nodes);
+    const pathfinder: Pathfinder = new AStar(grid.height, grid.width, grid.nodes);
+    const pathInfo: PathInfo = pathfinder.findPath();
     expect(pathInfo.pathFound).toEqual(true);
     expect(pathInfo.searchOrder.map(node => node.index)).toEqual([11,10,15,5,20,0,21,1,2,22,3,8,13,18,23,24]);
     expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([0,1,2,2,4,3,6,4,5,8,6,7,8,9,10,11]);

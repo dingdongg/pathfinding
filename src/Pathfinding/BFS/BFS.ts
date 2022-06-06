@@ -1,4 +1,4 @@
-import {Pathfinder, PathInfo, SearchedNode} from "../Pathfinder";
+import {INode, Pathfinder, PathInfo, SearchedNode} from "../Pathfinder";
 
 // Pathfinding class for breadth-first search (BFS)
 export class BFS implements Pathfinder {
@@ -11,12 +11,12 @@ export class BFS implements Pathfinder {
     startNode: any;
     endNode: any;
 
-    constructor(width: number, height: number) {
+    constructor(width: number, height: number, nodes: INode[]) {
         this.BOARD_HEIGHT = height;
         this.BOARD_WIDTH = width;
     }
 
-    public findPath(grid: any[]): PathInfo {
+    public findPath(): PathInfo {
         return {
             searchOrder: [],
             shortestPath: [],

@@ -156,7 +156,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     modifyGridBarrier(grid: any[], row: number, col: number, barrierType: BarrierNode) {
         const node = this.getNode(grid, row, col);
         // Setting node type
-        if (node.nodeType == barrierType) {
+        if (node.nodeType === barrierType) {
             Node.setType(node, NodeType.EmptyNode);
         } else {
             Node.setType(node, barrierType);
@@ -233,8 +233,8 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     // Finds shortest path and animates it
     findPath() {
-        const pathfinder = Pathfinder.createPathfinder(this.props.algorithm, this.state.boardHeight, this.state.boardWidth);
-        const path = pathfinder.findPath(this.state.grid);
+        const pathfinder = Pathfinder.createPathfinder(this.props.algorithm, this.state.boardHeight, this.state.boardWidth, this.state.grid);
+        const path = pathfinder.findPath();
         // Need to reset state of board for animation
         softResetGrid(this.state.grid);
         this.setState({ searchState: SearchState.Animating });
@@ -311,7 +311,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         let rowN: number = 0;//Keeps track of current row number
         for (const node of this.state.grid) {
             currRow.push(this.renderNode(node));
-            if (currRow.length % this.state.boardWidth == 0) {
+            if (currRow.length % this.state.boardWidth === 0) {
                 grid.push(this.renderRow(currRow, rowN));
                 rowN++;
                 currRow = [];
@@ -321,7 +321,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     }
 
     private renderFindPathBtn() {
-        if (this.state.searchState == SearchState.None) {
+        if (this.state.searchState === SearchState.None) {
             return <button onClick={() => this.findPath()} className="find-path">Find Path</button>;
         } else {
             return <button className="find-path">Find Path</button>;
@@ -331,7 +331,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     private renderShowDistBtn() {
         return (<button onClick={() => this.setState({...this.state, showDist: !this.state.showDist})}
-                className={this.state.showDist == true ? "show-dist" : "show-dist-off"}>
+                className={this.state.showDist === true ? "show-dist" : "show-dist-off"}>
                 Display Distance </button>)
     }
 
