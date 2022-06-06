@@ -3,14 +3,6 @@ import { IGrid, Pathfinder, PathInfo } from '../Pathfinder';
 import { NodeType} from '../../App/Node';
 import {Util} from '../util.test';
 
-/**
- * test("test case description", () => {
- * 
- *     ... lines of testing code ...
- * 
- * });
- */
-
 test('Go through forests unaffected', () => {
 
     let testGrid: IGrid = Util.createGrid(4, 7);
@@ -36,7 +28,6 @@ test('Go through forests unaffected', () => {
     expect(result.shortestPath).toEqual([16, 17, 18, 19, 20]);
 });
 
-// TODO
 test("Disjoint graph", () => {
     let testGrid: IGrid = Util.createGrid(4, 7);
     testGrid.nodes[16].nodeType = NodeType.StartNode;
