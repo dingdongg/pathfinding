@@ -1,5 +1,5 @@
 // Utility "Heap" implementation
-export class Heap {
+export class Heap<T> {
     heap: any[];
     getVal: any;
 
@@ -10,7 +10,7 @@ export class Heap {
     }
 
     // Inserts the value into the heap
-    insert(node: any) {
+    insert(node: T) {
         let index = this.heap.length;
         this.heap.push(node);
         while (index > 0) {
@@ -25,7 +25,7 @@ export class Heap {
     }
 
     // Inserts a list of values into heap
-    insertMany(nodes: any[]) {
+    insertMany(nodes: T[]) {
         for (const node of nodes) {
             this.insert(node);
         }

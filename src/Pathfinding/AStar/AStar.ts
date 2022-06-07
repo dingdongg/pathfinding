@@ -15,7 +15,7 @@ export class AStar implements Pathfinder {
     searchOrder: SearchedNode[] = [];
     shortestPath: number[] = [];
     pathFound: boolean = false;
-    heap: Heap = new Heap((node: any) => { return node.distance });
+    heap: Heap<INode> = new Heap((node: any) => { return node.distance });
     startNode: INode | undefined = undefined;
     endNode: INode | undefined = undefined;
 
