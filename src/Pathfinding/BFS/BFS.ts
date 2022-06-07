@@ -20,11 +20,9 @@ export class BFS implements Pathfinder {
     shortestPath: number[];
     pathFound: boolean;
 
-    constructor(height: number, width: number, n: INode[]) {
+    constructor(height: number, width: number, nodes: INode[]) {
         this.grid = {
-            height: height,
-            width: width,
-            nodes: n
+            height, width, nodes
         };
         this.startNode = undefined;
         this.endNode = undefined;
