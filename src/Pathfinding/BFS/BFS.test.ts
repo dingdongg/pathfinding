@@ -12,8 +12,8 @@ test('Go through forests unaffected', () => {
     }
     testGrid.nodes[20].nodeType = NodeType.EndNode;
 
-    let algorithm: Pathfinder = new BFS(testGrid.height, testGrid.width);
-    const result: PathInfo = algorithm.findPath(testGrid.nodes);
+    let algorithm: Pathfinder = new BFS(testGrid.height, testGrid.width, testGrid.nodes);
+    const result: PathInfo = algorithm.findPath();
     expect(result.pathFound).toEqual(true);
     expect(result.searchOrder.map(node => node.index)).toEqual([16,                         // layer 0
                                                                 9, 17, 23, 15,              // layer 1
@@ -36,8 +36,8 @@ test("Disjoint graph", () => {
     }
     testGrid.nodes[6].nodeType = NodeType.EndNode;
 
-    let algorithm: Pathfinder = new BFS(testGrid.height, testGrid.width);
-    const result: PathInfo = algorithm.findPath(testGrid.nodes);
+    let algorithm: Pathfinder = new BFS(testGrid.height, testGrid.width, testGrid.nodes);
+    const result: PathInfo = algorithm.findPath();
     expect(result.pathFound).toEqual(false);
     expect(result.searchOrder.map(node => node.index)).toEqual([16, 
                                                                 17, 23, 15, 

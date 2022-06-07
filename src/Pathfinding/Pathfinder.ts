@@ -3,11 +3,12 @@
 import {Djikstra} from "./Djikstra/Djikstra";
 import {AStar} from "./AStar/AStar";
 import {BFS} from "./BFS/BFS";
+import {DFS} from "./DFS/DFS"
 import { NodeType } from "../App/Node";
 
 // Enumeration of all the available algorithms
 export const enum Algorithm {
-    Djikstra = "Djikstra's", AStar = "A*", BFS = "BFS",
+    Djikstra = "Djikstra's", AStar = "A*", BFS = "BFS", DFS = "DFS"
 }
 
 export interface IGrid {
@@ -48,6 +49,8 @@ export abstract class Pathfinder {
                 return new BFS(BOARD_HEIGHT, BOARD_WIDTH, nodes);
             case Algorithm.AStar:
                 return new AStar(BOARD_HEIGHT, BOARD_WIDTH, nodes);
+            case Algorithm.DFS:
+                return new DFS(BOARD_HEIGHT, BOARD_WIDTH, nodes);
             default:
                 return new Djikstra(BOARD_HEIGHT, BOARD_WIDTH, nodes);
         }
