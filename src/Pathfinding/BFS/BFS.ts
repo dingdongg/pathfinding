@@ -16,10 +16,18 @@ export class BFS implements Pathfinder {
     endNode: INode | undefined;
     queue: Queue;
 
-    constructor(width: number, height: number, nodes: INode[]) {
-        this.BOARD_HEIGHT = height;
-        this.BOARD_WIDTH = width;
-        this.grid.nodes = nodes;
+    searchOrder: SearchedNode[];
+    shortestPath: number[];
+    pathFound: boolean;
+
+    constructor(height: number, width: number, n: INode[]) {
+        this.grid = {
+            height: height,
+            width: width,
+            nodes: n
+        };
+        this.startNode = undefined;
+        this.endNode = undefined;
         this.queue = new Queue();
         this.searchOrder = [];
         this.shortestPath = [];
@@ -28,9 +36,9 @@ export class BFS implements Pathfinder {
 
     public findPath(): PathInfo {
 
-        this.init(nodes);
+        this.init();
         let prev = this.solve();
-        this.reconstructPath(<INode> this.startNode, <INode> this.endNode, prev);
+        this.reconstructPath(this.startNode as INode, this.endNode as INode, prev);
         return {
             searchOrder: this.searchOrder,
             shortestPath: this.shortestPath,
@@ -41,18 +49,17 @@ export class BFS implements Pathfinder {
     /**
      *  Initializes all instance variables
      */
-    private init(nodes: INode[]) {
-        this.grid.nodes = nodes.slice();
+    private init() {
 
-        for (let i = 0; i < this.grid.nodes.length; i++) {
-            let currNode = this.grid.nodes[i];
-            if (currNode.nodeType === NodeType.StartNode) {
-                this.startNode = currNode;
+        for (const node of this.grid.nodes) {
+            if (node.nodeType === NodeType.StartNode) {
+                this.startNode = node;
                 this.startNode.distance = 0;
                 this.startNode.visited = true;
-            } else if (currNode.nodeType === NodeType.EndNode) {
-                this.endNode = currNode;
+            } else if (node.nodeType === NodeType.EndNode) {
+                this.endNode = node;
             }
+            if (this.startNode !== undefined && this.endNode !== undefined) break;
         }
     }
 
@@ -67,7 +74,7 @@ export class BFS implements Pathfinder {
             prev[i] = null;
         }
         // visited[this.getIndex(<INode> this.startNode)] = true;
-        this.markSearched(<INode> this.startNode, (<INode> this.startNode).distance);
+        this.markSearched(this.startNode as INode, (this.startNode as INode).distance);
 
         while (!this.queue.isEmpty()) {
             let node = this.queue.dequeue();
@@ -77,7 +84,7 @@ export class BFS implements Pathfinder {
                 let idx = this.getIndex(neighbor);
                 if (!this.grid.nodes[idx].visited && this.grid.nodes[idx].nodeType !== NodeType.WallNode) {
                     this.queue.enqueue(neighbor);
-                    neighbor.distance = (<INode> node).distance + 1;
+                    neighbor.distance = (node as INode).distance + 1;
                     this.markSearched(neighbor, neighbor.distance);
                     prev[idx] = node;
                     if (neighbor.nodeType === NodeType.EndNode) return prev;
@@ -90,7 +97,7 @@ export class BFS implements Pathfinder {
     private markSearched(node: INode, dist: number) {
         node.visited = true;
         this.searchOrder.push({
-            index: this.getIndex(<INode> node),
+            index: this.getIndex(node),
             distance: dist
         });
     }
@@ -130,7 +137,7 @@ export class BFS implements Pathfinder {
     /**
      *  calculate and return the 0-based array index of the node
      */
-    private getIndex(node: INode) {
+    private getIndex(node: INode): number {
         return node.row * this.grid.width + node.col;
     }
 
