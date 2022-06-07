@@ -27,10 +27,36 @@ export class DFS implements Pathfinder {
 
 
     public findPath(): PathInfo {
+
+        this.initStartEndNodes();
+        this.solve();
+        this.reconstructPath();
         return {                // stub
             searchOrder: [],
             shortestPath: [],
             pathFound: false
         }
+    }
+
+    private initStartEndNodes() {
+
+        for (const node of this.grid.nodes) {
+            if (node.nodeType === NodeType.StartNode) {
+                this.startNode = node;
+                node.distance = 0;
+                node.visited = true;
+            } else if (node.nodeType === NodeType.EndNode) {
+                this.endNode = node;
+            }
+            if (this.startNode !== undefined && this.endNode !== undefined) break;
+        }
+    }
+
+    private solve() {
+
+    }
+
+    private reconstructPath() {
+        
     }
 }
