@@ -14,7 +14,6 @@ test('DFS1', () => {
 
     let algorithm: Pathfinder = new DFS(testGrid.height, testGrid.width, testGrid.nodes);
     const result: PathInfo = algorithm.findPath();
-    console.log('yeattterarer');
     expect(result.pathFound).toEqual(true);
     expect(result.searchOrder.map(node => node.index)).toEqual([16, 9, 2, 3, 4, 5, 6, 13, 20]);
     expect(result.searchOrder.map(node => node.distance)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
