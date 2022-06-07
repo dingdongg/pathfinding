@@ -4,16 +4,16 @@ import { NodeType } from '../../App/Node';
 import { Util } from '../util.test';
 
 
-test("Open Board test", () => {
+test("Open Board test (map0)", () => {
     let grid: IGrid  = Util.createGrid(4, 5);
     grid.nodes[6].nodeType = NodeType.StartNode;
     grid.nodes[19].nodeType = NodeType.EndNode;
     const pathfinder: Pathfinder = new AStar(grid.height, grid.width, grid.nodes);
     const pathInfo: PathInfo = pathfinder.findPath();
     expect(pathInfo.pathFound).toEqual(true);
-    expect(pathInfo.searchOrder.map(node => node.index)).toEqual([7,8,13,14]);
-    expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([1,2,3,4]);
-    expect(pathInfo.shortestPath).toEqual([7,8,13,14])
+    expect(pathInfo.searchOrder.map(node => node.index)).toEqual([6,7,11,8,12,13,9,17,14,18,19]);
+    expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([0,1,1,2,2,3,3,3,4,4,5]);
+    expect(pathInfo.shortestPath).toEqual([6,7,8,13,14,19])
 });
 
 test("Basic wall test (map1)", () => {

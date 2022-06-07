@@ -14,31 +14,44 @@ export class AStar implements Pathfinder {
     grid: IGrid;
     searchOrder: SearchedNode[] = [];
     shortestPath: number[] = [];
-    pathFound: boolean = false;
-    heap: Heap<INode> = new Heap((node: any) => { return node.distance });
+    heap: Heap<INode> = new Heap(this.getDist);
     startNode: INode | undefined = undefined;
     endNode: INode | undefined = undefined;
 
-    constructor(BOARD_HEIGHT: number, BOARD_WIDTH: number, baseNodes: BaseINode[]) {
+    constructor(BOARD_HEIGHT: number, BOARD_WIDTH: number, readonly baseNodes: BaseINode[]) {
         const nodes: INode[] = this.convertNodes(baseNodes);
         this.grid = { height: BOARD_HEIGHT, width: BOARD_WIDTH, nodes: nodes };
-        this.heap = new Heap(this.getDist);
     }
 
 
     public findPath(): PathInfo {
-        // this.addNeighbors(this.startNode);
-        // this.search();
-        // this.calcShortestPath();
+        this.initStartEndNodes();
+        this.heap.insert(this.startNode as INode);
+        this.search();
+        this.calcShortestPath();
         return {
             searchOrder: this.searchOrder, // Order in which nodes were searched
             shortestPath: this.shortestPath, // Order of nodes in shortest path
-            pathFound: this.pathFound, // False if no path was found
+            pathFound: (this.endNode as INode).visited, // False if no path was found
+        }
+    }
+
+    // Search loop
+    private search(): void {
+        while (this.heap.length() > 0 && !(this.endNode as INode).visited) {
+            let next: INode | undefined = undefined;
+            while (next === undefined || (next as INode).visited) {
+                next = this.heap.pop();
+            }
+            next.visited = true;
+            this.addToSearchOrder(next);
+            this.addNeighbors(next);
         }
     }
 
     // Adds node's neighbours to heap
     // Does not add visited or wall nodes
+    // Sets distance for all neighbours
     private addNeighbors(node: INode): void {
         const WIDTH = this.grid.width;
         // Indices of top, right, bottom, and left neighbours
@@ -47,31 +60,71 @@ export class AStar implements Pathfinder {
             bottom: number | undefined = (node.row + 1) * WIDTH + node.col,
             left: number | undefined = node.row * WIDTH + node.col - 1;
         top = top >= 0 ? top : undefined;
-        bottom = bottom < WIDTH*this.grid.height ? bottom : undefined;
-        left = Math.round(left/WIDTH) === node.row ? left : undefined;
-        right = Math.round(right/WIDTH) === node.row ? left : undefined;
-        const neighbors: (number|undefined)[] = [top, right, bottom, left];
+        bottom = bottom < WIDTH * this.grid.height ? bottom : undefined;
+        left = Math.floor(left / WIDTH) === node.row ? left : undefined;
+        right = Math.floor(right / WIDTH) === node.row ? right : undefined;
+        const neighbours: (number | undefined)[] = [top, right, bottom, left];
         const nodes: INode[] = this.grid.nodes;
-        for (const index of neighbors) {
-            if (index == undefined) continue;
-            const node: INode = nodes[index];
-            if (node.nodeType == NodeType.WallNode || node.visited) continue;
-            this.heap.insert(node);
+        for (const index of neighbours) {
+            if (index === undefined) continue;
+            const neighbour: INode = nodes[index];
+            if (node === undefined) {
+                console.log("UNDEFINED NODE: " + index);
+            }
+            if (neighbour.nodeType === NodeType.WallNode || neighbour.visited) continue;
+            if (node.distance + neighbour.weight >= neighbour.distance) continue;
+            neighbour.prev = node;
+            neighbour.distance = node.distance + neighbour.weight;
+            this.heap.insert(neighbour);
+        }
+    }
+
+    // Initializes "this.shortestPath"
+    private calcShortestPath() {
+        if (!this.endNode?.visited) return;
+        let prev: BaseINode = this.endNode as BaseINode;
+        while (prev !== null) {
+            this.shortestPath.unshift(this.getIndex(prev));
+            prev = prev.prev;
+        }
+        this.shortestPath = this.shortestPath;
+    }
+
+    // Returns the (array) index for a node
+    private getIndex(node: BaseINode) {
+        return node.row * this.grid.width + node.col;
+    }
+
+    // Initialization methods
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Initializes start and end nodes.
+    private initStartEndNodes(): void {
+        for (const node of this.grid.nodes) {
+            if (node.nodeType === NodeType.EndNode) {
+                this.endNode = node;
+            } else if (node.nodeType === NodeType.StartNode) {
+                node.distance = 0;
+                this.startNode = node;
+            }
+            if (this.startNode !== undefined && this.endNode !== undefined) break;
         }
     }
 
     // Initializes Euclidean distance of each node in grid (convert from BaseINode to ASharp INode)
     private convertNodes(baseNodes: BaseINode[]): INode[] {
+        let endNode: BaseINode | undefined = undefined;
         for (const node of baseNodes) {
             if (node.nodeType === NodeType.EndNode) {
-                this.endNode = { ...node, euclidDist: 0 };
+                endNode = node;
                 break;
             }
         }
 
         const ret: INode[] = [];
         for (const node of baseNodes) {
-            ret.push(this.baseToINode(node));
+            ret.push({... node, euclidDist: this.calcEuclidDist(node, endNode as BaseINode)});
         }
         return ret;
     };
@@ -81,13 +134,17 @@ export class AStar implements Pathfinder {
         return ((node1.col - node2.col) ** 2 + (node1.row - node2.row) ** 2) ** (1 / 2);
     }
 
-    // Converts "Base" INode to ASharp INode. Assumes "EndNode" is already found.
-    private baseToINode(node: BaseINode): INode {
-        return { ...node, euclidDist: this.calcEuclidDist(node, this.endNode as INode) };
-    }
-
     // Returns the "distance" to the node, as relevant to ASharp
     private getDist(node: INode): number {
         return node.distance + node.euclidDist;
+    }
+
+    // Adds the node to the search order
+    private addToSearchOrder(node: INode) {
+        this.searchOrder.push(
+            {
+                index: this.getIndex(node),
+                distance: node.distance,
+            });
     }
 }

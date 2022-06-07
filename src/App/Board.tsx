@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Algorithm, Pathfinder, SearchedNode } from '../Pathfinding/Pathfinder';
+import { Algorithm, Pathfinder, PathInfo, SearchedNode } from '../Pathfinding/Pathfinder';
 import { Node, NodeType, BarrierNode, INodeProps } from "./Node";
 
 // WHEN UPDATING BOARD DIMENSIONS, MAKE SURE TO UPDATE _board.scss AS WELL
@@ -233,16 +233,17 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     // Finds shortest path and animates it
     findPath() {
+        softResetGrid(this.state.grid);
         const pathfinder = Pathfinder.createPathfinder(this.props.algorithm, this.state.boardHeight, this.state.boardWidth, this.state.grid);
-        const path = pathfinder.findPath();
+        const pathInfo: PathInfo = pathfinder.findPath();
         // Need to reset state of board for animation
         softResetGrid(this.state.grid);
         this.setState({ searchState: SearchState.Animating });
 
-        const searchOrder = path.searchOrder, shortestPath = path.shortestPath;
+        const searchOrder = pathInfo.searchOrder, shortestPath = pathInfo.shortestPath;
         if (searchOrder.length > 0) {
             setTimeout(() => { this.setState({ searchState: SearchState.Animating }) }, 0);
-            setTimeout(() => { this.animateSearch(searchOrder, shortestPath, 0) }, 0);
+            setTimeout(() => { this.animateSearch(pathInfo, 0) }, 0);
         }
     }
 
@@ -256,7 +257,8 @@ export default class Board extends Component<IBoardProps, IBoardState> {
 
     // Animates the "next"th node in the searchedNodes
     // Hold "shortestPath" so can start shortest path animation when search is done
-    animateSearch(searchOrder: SearchedNode[], shortestPath: number[], next: number) {
+    animateSearch(pathInfo: PathInfo, next: number) {
+        const searchOrder: SearchedNode[] = pathInfo.searchOrder;
         if (this.state.searchState !== SearchState.Animating) return; // Edge case where board reset before animation done
         const grid = this.state.grid;
         grid[searchOrder[next].index].visited = true;
@@ -264,21 +266,22 @@ export default class Board extends Component<IBoardProps, IBoardState> {
         this.setState({ grid: grid });
         next++;
         if (next < searchOrder.length) {
-            setTimeout(() => { this.animateSearch(searchOrder, shortestPath, next) }, 40);
+            setTimeout(() => { this.animateSearch(pathInfo, next) }, 40);
         } else {
-            setTimeout(() => { this.animatePath(shortestPath, 0) }, 40);
+            setTimeout(() => { this.animatePath(pathInfo, 0) }, 40);
         }
     }
 
     // Animates the "next"th node in the shortestPath
-    animatePath(shortestPath: number[], next: number) {
-        if (this.state.searchState !== SearchState.Animating) return; // Edge case where board reset before animation done
+    animatePath(pathInfo: PathInfo, next: number) {
+        if (this.state.searchState !== SearchState.Animating || !pathInfo.pathFound) return; // Edge case where board reset before animation done
+        const shortestPath: number[] = pathInfo.shortestPath;
         const grid = this.state.grid;
         grid[shortestPath[next]].isPath = true;
         this.setState({ grid: grid });
         next++;
         if (next < shortestPath.length) {
-            setTimeout(() => { this.animatePath(shortestPath, next) }, 100);
+            setTimeout(() => { this.animatePath(pathInfo, next) }, 100);
         } else {
             this.setState({ searchState: SearchState.Done });
         }
@@ -321,7 +324,7 @@ export default class Board extends Component<IBoardProps, IBoardState> {
     }
 
     private renderFindPathBtn() {
-        if (this.state.searchState === SearchState.None) {
+        if (this.state.searchState === SearchState.None || this.state.searchState == SearchState.Done) {
             return <button onClick={() => this.findPath()} className="find-path">Find Path</button>;
         } else {
             return <button className="find-path">Find Path</button>;

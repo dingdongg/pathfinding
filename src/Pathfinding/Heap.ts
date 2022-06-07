@@ -1,16 +1,16 @@
 // Utility "Heap" implementation
 export class Heap<T> {
     heap: any[];
-    getVal: any;
+    getVal: Function;
 
     // Constructs heap that uses getVal(node) to compare heap values
-    constructor(getVal: any) {
+    constructor(getVal: Function) {
         this.heap = [];
         this.getVal = getVal;
     }
 
     // Inserts the value into the heap
-    insert(node: T) {
+    insert(node: any) {
         let index = this.heap.length;
         this.heap.push(node);
         while (index > 0) {
@@ -25,7 +25,7 @@ export class Heap<T> {
     }
 
     // Inserts a list of values into heap
-    insertMany(nodes: T[]) {
+    insertMany(nodes: any[]) {
         for (const node of nodes) {
             this.insert(node);
         }

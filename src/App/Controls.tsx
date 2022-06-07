@@ -124,6 +124,9 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
             <button onClick={() => this.changeAlgorithm(Algorithm.BFS)}
                 className={this.state.algorithm === Algorithm.BFS ? "selected bfs" : ""}>
                 BFS</button>
+            <button onClick={() => this.changeAlgorithm(Algorithm.DFS)}
+                className={this.state.algorithm === Algorithm.DFS ? "selected dfs" : ""}>
+                DFS</button>
         </div>;
     }
     changeAlgorithm(algorithm: Algorithm): void {
