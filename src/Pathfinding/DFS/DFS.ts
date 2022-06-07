@@ -29,8 +29,8 @@ export class DFS implements Pathfinder {
     public findPath(): PathInfo {
 
         this.initStartEndNodes();
-        let path = this.solve();
-        this.reconstructPath(this.startNode as INode, this.endNode as INode, path);
+        this.solve(this.startNode as INode, 0);
+        this.reconstructPath(this.startNode as INode, this.endNode as INode);
         return {                // stub
             searchOrder: this.searchOrder,
             shortestPath: this.shortestPath,
@@ -44,7 +44,6 @@ export class DFS implements Pathfinder {
             if (node.nodeType === NodeType.StartNode) {
                 this.startNode = node;
                 node.distance = 0;
-                node.visited = true;
             } else if (node.nodeType === NodeType.EndNode) {
                 this.endNode = node;
             }
@@ -52,33 +51,21 @@ export class DFS implements Pathfinder {
         }
     }
 
-    private solve() {
-        
-        this.stack.push(this.startNode as INode);
-        let prev: INode[] = [];
+    private solve(node: INode, dist: number) {
 
-        let n = this.grid.height * this.grid.width;
-        // for (let i = 0; i < n; i++) {
-        //     prev[i] = null;
-        // }
-        this.markSearched(this.startNode as INode, (this.startNode as INode).distance);
+        if (node.visited) return;
+        this.markSearched(node, dist);
 
-        while (!(this.stack.length == 0)) {
-            let node = this.stack.pop();
-            let neighbors = this.getNeighbors(node as INode);
+        if (node === this.endNode) return;
 
-            for (const neighbor of neighbors) {
-                let idx = this.getIndex(neighbor);
-                if (!this.grid.nodes[idx].visited && this.grid.nodes[idx].nodeType !== NodeType.WallNode) {
-                    this.stack.push(neighbor);
-                    neighbor.distance = (node as INode).distance + 1;
-                    this.markSearched(neighbor, neighbor.distance);
-                    prev[idx] = node as INode;
-                    if (neighbor.nodeType === NodeType.EndNode) return prev;
-                }
+        let neighbors = this.getNeighbors(node);
+        for (const neighbor of neighbors) {
+            if (!neighbor.visited && neighbor.nodeType !== NodeType.WallNode) {
+                neighbor.prev = node;
+                this.solve(neighbor, dist + 1);
             }
+            if ((this.endNode as INode).visited) return;
         }
-        return prev;
         
     }
 
@@ -116,9 +103,9 @@ export class DFS implements Pathfinder {
         });
     }
 
-    private reconstructPath(start: INode, end: INode, prevPath: INode[]) {
+    private reconstructPath(start: INode, end: INode) {
         let path = [];
-        for (let at = end; at != null; at = prevPath[this.getIndex(at)]) {
+        for (let at = end; at != null; at = at.prev) {
             path.push(this.getIndex(at));
         }
 
