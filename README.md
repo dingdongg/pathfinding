@@ -1,4 +1,4 @@
-[Link to website](https://matthewmywu.github.io/pathfinding/)
+# [Link to website](https://matthewmywu.github.io/pathfinding/)
 
 ## Overview
 Welcome to my pathfinder visualizer! I Wanted to create something that would help people (*students*) visualize various pathfinding algorithms, while also being easily accessible and easy to use. As such, I tried to create a UI that was simple and intuitive, while still being able to handle the complexities of various pathfinding algorithms.
