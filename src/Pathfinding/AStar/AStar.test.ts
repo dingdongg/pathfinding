@@ -25,8 +25,8 @@ test("Basic wall test (map1)", () => {
     const pathfinder: Pathfinder = new AStar(grid.height, grid.width, grid.nodes);
     const pathInfo: PathInfo = pathfinder.findPath();
     expect(pathInfo.pathFound).toEqual(true);
-    expect(pathInfo.searchOrder.map(node => node.index)).toEqual([11,10,15,20,21,22,5,0,1,2,3,8,13,18,19,24]);
-    expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([0,1,2,3,4,5,6,7,8,9,10,11]);
+    expect(pathInfo.searchOrder.map(node => node.index)).toEqual([11,10,15,5,20,21,22,0,1,2,3,8,13,18,9,4,19,14,24]);
+    expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([0,1,2,2,3,4,5,3,4,5,6,7,8,9,8,7,10,9,11]);
     expect(pathInfo.shortestPath).toEqual([11,10,5,0,1,2,3,8,13,18,19,24])
 });
 
@@ -40,7 +40,7 @@ test("Basic wall and forest test (map2)", () => {
     const pathfinder: Pathfinder = new AStar(grid.height, grid.width, grid.nodes);
     const pathInfo: PathInfo = pathfinder.findPath();
     expect(pathInfo.pathFound).toEqual(true);
-    expect(pathInfo.searchOrder.map(node => node.index)).toEqual([11,10,15,5,20,0,21,1,2,22,3,8,13,18,23,24]);
-    expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([0,1,2,2,4,3,6,4,5,8,6,7,8,9,10,11]);
-    expect(pathInfo.shortestPath).toEqual([11,10,15,20,21,22,23,24])
+    expect(pathInfo.searchOrder.map(node => node.index)).toEqual([11,10,15,5,20,0,21,1,2,22,3,8,13,18,9,4,19,14,24]);
+    expect(pathInfo.searchOrder.map(node => node.distance)).toEqual([0,1,2,2,4,3,6,4,5,8,6,7,8,9,8,7,10,9,11]);
+    expect(pathInfo.shortestPath).toEqual([11,10,5,0,1,2,3,8,13,18,19,24])
 });
