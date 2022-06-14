@@ -4,8 +4,11 @@
 @import "node";
 @import "board";
 
-.App {
+.app {
     display: flex;
     justify-content: center;
+    align-content: center;
     flex-wrap: wrap;
+    min-width: fit-content;
+    overflow: scroll;
 }

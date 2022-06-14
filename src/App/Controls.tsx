@@ -78,7 +78,7 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
     }
 
     render() {
-        return (<div>
+        return (<div className="app">
             <div className="header">
                 <h1>Pathfinder</h1>
                 <div className="controls">

@@ -2,11 +2,12 @@
     display: grid;
     grid-auto-flow: row;
     margin: auto;
-    margin-top: 20px;
     margin-bottom: 60px;
     margin-top: 5px;
+    padding: 0 40px;
     justify-content: center;
-    width: 100vw;
+    min-width: 600px;
+    overflow: scroll;
 
     .board-row {
         display: flex;

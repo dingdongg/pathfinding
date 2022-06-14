@@ -5,9 +5,7 @@ import { NodeType } from "./Node";
 
 function App() {
   return (
-    <div className="App">
       <Controls />
-    </div>
   );
 }
 
