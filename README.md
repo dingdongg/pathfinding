@@ -14,6 +14,6 @@ Welcome to my pathfinder visualizer! I Wanted to create something that would hel
 * The "Reset" button resets the board, including barriers and start/end node positions. This also resets board dimensions, if they were changed
 
 ## TODO:
-* Implement more pathfinding algorithms (note only Djikstra's is implemented right now)
+* Implement more pathfinding algorithms
 * Add "information" button, with details on how to use the controls
 * Add ability to change pathfinding speed
