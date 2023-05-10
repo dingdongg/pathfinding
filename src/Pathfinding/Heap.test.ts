@@ -1,7 +1,7 @@
 import { Heap } from './Heap';
 
 test('basic heap test', () => {
-    const heap: Heap = new Heap((val: number) => val);
+    const heap: Heap<number> = new Heap((val: number) => val);
     const values: number[] = [10,2,1,5,7];
     heap.insertMany(values);
     expect(heap.pop()).toBe(1);
@@ -17,7 +17,7 @@ test('basic heap test', () => {
 });
 
 test('repeated values test', () => {
-    const heap: Heap = new Heap((val: number) => val);
+    const heap: Heap<number> = new Heap((val: number) => val);
     const values: number[] = [1,3,5,3,6,7,3,8,2,2,9,4,3,4]
     const expected: number[] = [...values].sort();
     heap.insertMany(values);

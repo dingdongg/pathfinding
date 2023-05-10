@@ -78,7 +78,7 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
     }
 
     render() {
-        return (<div>
+        return (<div className="app">
             <div className="header">
                 <h1>Pathfinder</h1>
                 <div className="controls">
@@ -102,13 +102,13 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
     private renderBarrierTypes() {
         return <div className="barrier-types">
             <button onClick={() => this.changeBarrier(NodeType.WallNode)}
-                className={this.state.barrierType == NodeType.WallNode ? "selected wall" : ""}>
+                className={this.state.barrierType === NodeType.WallNode ? "selected wall" : ""}>
                 River</button>
             <button onClick={() => this.changeBarrier(NodeType.ForestNode)}
-                className={this.state.barrierType == NodeType.ForestNode ? "selected forest" : ""}>
+                className={this.state.barrierType === NodeType.ForestNode ? "selected forest" : ""}>
                 Forest</button>
             <button onClick={() => this.changeBarrier(NodeType.EmptyNode)}
-                className={this.state.barrierType == NodeType.EmptyNode ? "selected none" : ""}>
+                className={this.state.barrierType === NodeType.EmptyNode ? "selected none" : ""}>
                 None</button>
         </div>;
     }
@@ -116,11 +116,17 @@ export default class Controls extends Component<IControlsProps, IControlsState> 
     private renderAlgorithms() {
         return <div className="algorithms">
             <button onClick={() => this.changeAlgorithm(Algorithm.Djikstra)}
-                className={this.state.algorithm == Algorithm.Djikstra ? "selected djikstra's" : ""}>
+                className={this.state.algorithm === Algorithm.Djikstra ? "selected djikstra's" : ""}>
                 Djikstra's</button>
-            <button onClick={() => this.changeAlgorithm(Algorithm.ASharp)}
-                className={this.state.algorithm == Algorithm.ASharp ? "selected a-sharp" : ""}>
-                A#</button>
+            <button onClick={() => this.changeAlgorithm(Algorithm.AStar)}
+                className={this.state.algorithm === Algorithm.AStar ? "selected a-sharp" : ""}>
+                A*</button>
+            <button onClick={() => this.changeAlgorithm(Algorithm.BFS)}
+                className={this.state.algorithm === Algorithm.BFS ? "selected bfs" : ""}>
+                BFS</button>
+            <button onClick={() => this.changeAlgorithm(Algorithm.DFS)}
+                className={this.state.algorithm === Algorithm.DFS ? "selected dfs" : ""}>
+                DFS</button>
         </div>;
     }
     changeAlgorithm(algorithm: Algorithm): void {

@@ -1,10 +1,10 @@
 // Utility "Heap" implementation
-export class Heap {
+export class Heap<T> {
     heap: any[];
-    getVal: any;
+    getVal: Function;
 
     // Constructs heap that uses getVal(node) to compare heap values
-    constructor(getVal: any) {
+    constructor(getVal: Function) {
         this.heap = [];
         this.getVal = getVal;
     }
